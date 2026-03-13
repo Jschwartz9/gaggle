@@ -30,6 +30,8 @@ export interface Event {
   attendeeIds: string[];
   vibesTags: string[];
   createdAt: string;
+  featured?: boolean; // Featured events appear prominently
+  sponsored?: boolean; // Sponsored events have special badges
 }
 
 // Location types
@@ -106,4 +108,22 @@ export interface Notification {
   read: boolean;
   relatedEventId?: string;
   relatedUserId?: string;
+}
+
+// Message types
+export interface Message {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface Conversation {
+  id: string;
+  participantIds: string[];
+  lastMessage?: Message;
+  lastActivity: string;
+  unreadCount: number;
 }

@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --primary: #C8F135; /* Electric Lime */
-  --accent: #FF6B5B; /* Warm Coral */
-  --deep: #1A0A2E; /* Dark Violet */
-  --background: #F9F8F4; /* Off-White */
-  --text: #1A1A1A; /* Near-Black */
+  --primary: #FF6B35; /* Orange from logo */
+  --accent: #FF8C5A; /* Lighter orange */
+  --deep: #1A1A1A; /* Black like logo text */
+  --background: #FFFFFF; /* Pure white like logo background */
+  --text: #1A1A1A; /* Black text */
   --muted: #6B7280; /* Gray */
 }
 

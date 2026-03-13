@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Event } from '@/lib/types';
 import { getUserById } from '@/lib/mockData';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, Star, DollarSign } from 'lucide-react';
 
 interface EventCardProps {
   event: Event;
@@ -56,6 +56,22 @@ export default function EventCard({ event }: EventCardProps) {
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${categoryColors[event.category] || 'bg-gray-100 text-gray-800'}`}>
               {event.category}
             </span>
+          </div>
+
+          {/* Featured/Sponsored Badges */}
+          <div className="absolute top-3 right-3 flex flex-col space-y-2">
+            {event.featured && (
+              <span className="flex items-center space-x-1 px-2 py-1 bg-primary text-deep rounded-full text-xs font-medium">
+                <Star className="w-3 h-3" />
+                <span>Featured</span>
+              </span>
+            )}
+            {event.sponsored && (
+              <span className="flex items-center space-x-1 px-2 py-1 bg-yellow-500 text-white rounded-full text-xs font-medium">
+                <DollarSign className="w-3 h-3" />
+                <span>Sponsored</span>
+              </span>
+            )}
           </div>
         </div>
 

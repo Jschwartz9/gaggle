@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Filter } from 'lucide-react';
+import Image from 'next/image';
 import EventCard from '@/components/EventCard';
 import FilterSheet from '@/components/FilterSheet';
 import CitySelector from '@/components/CitySelector';
@@ -61,6 +62,19 @@ export default function HomePage() {
     return events;
   }, [selectedCity, activeCategory, filters]);
 
+  // Featured/sponsored events for top section
+  const sponsoredFeaturedEvents = useMemo(() => {
+    return mockEvents
+      .filter(event => event.location.city === selectedCity && (event.featured || event.sponsored))
+      .sort((a, b) => {
+        // Prioritize sponsored events first, then featured
+        if (a.sponsored && !b.sponsored) return -1;
+        if (!a.sponsored && b.sponsored) return 1;
+        return b.attendeeIds.length - a.attendeeIds.length;
+      })
+      .slice(0, 3);
+  }, [selectedCity]);
+
   // Featured events for "Hot This Weekend"
   const featuredEvents = useMemo(() => {
     return mockEvents
@@ -79,7 +93,15 @@ export default function HomePage() {
         <header className="sticky top-0 z-30 bg-background border-b border-gray-200 p-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <h1 className="text-2xl font-bold text-primary">Gaggle</h1>
+            <div className="flex items-center">
+              <Image
+                src="/gaggle-logo.svg"
+                alt="Gaggle Logo"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+              />
+            </div>
 
             {/* City Selector */}
             <CitySelector
@@ -89,9 +111,40 @@ export default function HomePage() {
           </div>
         </header>
 
-        {/* Hot This Weekend Section */}
+        {/* Featured & Sponsored Events Section */}
+        {sponsoredFeaturedEvents.length > 0 && (
+          <section className="p-4 bg-gradient-to-r from-primary/5 to-accent/5">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-bold text-text">Featured Events</h2>
+              <span className="text-xs bg-primary text-deep px-2 py-1 rounded-full font-medium">
+                Don't Miss
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {sponsoredFeaturedEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Hot This Weekend / Curated Events Section */}
         <section className="p-4">
-          <h2 className="text-lg font-bold text-text mb-3">Hot This Weekend</h2>
+          {selectedCity === 'Lexington' ? (
+            <>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-bold text-text">Curated for Lexington</h2>
+                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
+                  Hand-picked events
+                </span>
+              </div>
+              <p className="text-sm text-muted mb-4">
+                Specially selected experiences that showcase the best of Lexington's charm and natural beauty.
+              </p>
+            </>
+          ) : (
+            <h2 className="text-lg font-bold text-text mb-3">Hot This Weekend</h2>
+          )}
           <div className="flex space-x-4 overflow-x-auto pb-2">
             {featuredEvents.map((event) => (
               <div key={event.id} className="w-72 flex-shrink-0">

@@ -1,12 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Plus, Bell, User } from 'lucide-react';
+import { Home, Search, Plus, Bell, User, Users } from 'lucide-react';
 
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/explore', icon: Search, label: 'Explore' },
+  { href: '/friends', icon: Users, label: 'Friends' },
   { href: '/post', icon: Plus, label: 'Post', isProminent: true },
   { href: '/notifications', icon: Bell, label: 'Notifications' },
   { href: '/profile', icon: User, label: 'Profile' },
@@ -58,7 +60,13 @@ export default function BottomNav() {
       <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 p-6 flex-col z-40">
         {/* Logo */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-primary">Gaggle</h1>
+          <Image
+            src="/gaggle-logo.svg"
+            alt="Gaggle Logo"
+            width={160}
+            height={60}
+            className="h-12 w-auto"
+          />
         </div>
 
         {/* Navigation Items */}

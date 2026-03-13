@@ -1,6 +1,6 @@
-import { User, Event, City, EventCategory, AgeGroup, Notification } from './types';
+import { User, Event, City, EventCategory, AgeGroup, Notification, Message, Conversation } from './types';
 
-// Mock Cities (10 US cities as specified)
+// Mock Cities (11 US cities as specified, including Lexington)
 export const mockCities: City[] = [
   { id: 'nyc', name: 'New York', state: 'NY', coordinates: { lat: 40.7128, lng: -74.0060 } },
   { id: 'la', name: 'Los Angeles', state: 'CA', coordinates: { lat: 34.0522, lng: -118.2437 } },
@@ -12,6 +12,7 @@ export const mockCities: City[] = [
   { id: 'atl', name: 'Atlanta', state: 'GA', coordinates: { lat: 33.7490, lng: -84.3880 } },
   { id: 'den', name: 'Denver', state: 'CO', coordinates: { lat: 39.7392, lng: -104.9903 } },
   { id: 'dc', name: 'Washington DC', state: 'DC', coordinates: { lat: 38.9072, lng: -77.0369 } },
+  { id: 'lex', name: 'Lexington', state: 'VA', coordinates: { lat: 37.7844, lng: -79.4426 } },
 ];
 
 // Mock Users (8 users, ages 22-30)
@@ -143,6 +144,8 @@ export const mockEvents: Event[] = [
     attendeeIds: ['1', '5', '3', '4', '8', '2', '7'], // 47 mock attendees (showing first 7)
     vibesTags: ['Upscale', 'Social', 'Views'],
     createdAt: '2024-03-01',
+    featured: true,
+    sponsored: true,
   },
   {
     id: '2',
@@ -202,6 +205,7 @@ export const mockEvents: Event[] = [
     attendeeIds: ['4', '2', '8', '1', '7', '5', '3', '6'], // 68 mock attendees (showing first 8)
     vibesTags: ['Professional', 'Innovative', 'Structured'],
     createdAt: '2024-02-28',
+    featured: true,
   },
   {
     id: '5',
@@ -222,6 +226,7 @@ export const mockEvents: Event[] = [
     attendeeIds: ['5', '1', '3', '8', '7', '2', '4', '6'], // 112 mock attendees (showing first 8)
     vibesTags: ['Creative', 'Community', 'Interactive'],
     createdAt: '2024-03-03',
+    sponsored: true,
   },
   {
     id: '6',
@@ -320,6 +325,106 @@ export const mockEvents: Event[] = [
     vibesTags: ['Late-night', 'Foodie', 'Adventure'],
     createdAt: '2024-03-09',
   },
+  // Lexington, VA Curated Events
+  {
+    id: '11',
+    title: 'Blue Ridge Mountain Sunset Hike',
+    description: 'Join us for a guided sunset hike with stunning valley views. Perfect for photography and making new friends.',
+    category: 'Outdoors',
+    hostId: '7',
+    imageUrl: 'https://picsum.photos/seed/blueridge/400/300',
+    date: '2024-03-23',
+    time: '5:30 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Blue Ridge Parkway',
+    },
+    price: 15,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['7', '2', '1', '5', '3'], // 18 mock attendees (showing first 5)
+    vibesTags: ['Scenic', 'Adventure', 'Photography'],
+    createdAt: '2024-03-10',
+  },
+  {
+    id: '12',
+    title: 'Historic Downtown Walking Tour',
+    description: 'Discover Lexington\'s rich Civil War history and charming architecture. Led by local historian.',
+    category: 'Arts & Culture',
+    hostId: '1',
+    imageUrl: 'https://picsum.photos/seed/historic/400/300',
+    date: '2024-03-24',
+    time: '2:00 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Historic Downtown',
+      address: 'Washington & Lee University',
+    },
+    price: null, // Free
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['1', '3', '5', '8'], // 12 mock attendees (showing first 4)
+    vibesTags: ['Educational', 'Historic', 'Walking'],
+    createdAt: '2024-03-11',
+  },
+  {
+    id: '13',
+    title: 'Farm-to-Table Dinner Experience',
+    description: 'Savor locally-sourced cuisine at a beautiful countryside venue. Meet the farmers and chefs behind your meal.',
+    category: 'Food & Drink',
+    hostId: '8',
+    imageUrl: 'https://picsum.photos/seed/farmtable/400/300',
+    date: '2024-03-25',
+    time: '6:00 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Countryside',
+      address: 'Valley View Farm',
+    },
+    price: 45,
+    ageGroup: '21+' as AgeGroup,
+    attendeeIds: ['8', '1', '4', '5', '2', '3'], // 24 mock attendees (showing first 6)
+    vibesTags: ['Farm-fresh', 'Intimate', 'Local'],
+    createdAt: '2024-03-12',
+  },
+  {
+    id: '14',
+    title: 'Artisan Coffee Cupping Workshop',
+    description: 'Learn the art of coffee tasting with local roasters. Discover flavor profiles and brewing techniques.',
+    category: 'Wellness',
+    hostId: '5',
+    imageUrl: 'https://picsum.photos/seed/coffee/400/300',
+    date: '2024-03-26',
+    time: '10:00 AM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Downtown',
+      address: 'Main Street Coffee Co.',
+    },
+    price: 25,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['5', '1', '8', '3'], // 16 mock attendees (showing first 4)
+    vibesTags: ['Artisan', 'Educational', 'Cozy'],
+    createdAt: '2024-03-13',
+  },
+  {
+    id: '15',
+    title: 'Vintage Vinyl & Wine Night',
+    description: 'Browse rare vinyl records while sampling Virginia wines. Local musicians will perform acoustic sets.',
+    category: 'Music',
+    hostId: '3',
+    imageUrl: 'https://picsum.photos/seed/vinyl/400/300',
+    date: '2024-03-27',
+    time: '7:00 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Main Street',
+      address: 'Record Exchange',
+    },
+    price: 20,
+    ageGroup: '21+' as AgeGroup,
+    attendeeIds: ['3', '1', '5', '8', '2'], // 20 mock attendees (showing first 5)
+    vibesTags: ['Vintage', 'Musical', 'Wine'],
+    createdAt: '2024-03-14',
+  },
 ];
 
 // Mock Notifications
@@ -351,6 +456,90 @@ export const mockNotifications: Notification[] = [
   },
 ];
 
+// Mock Messages
+export const mockMessages: Message[] = [
+  {
+    id: '1',
+    senderId: '2',
+    receiverId: '1',
+    content: 'Hey! Are you going to the trail run this weekend?',
+    timestamp: '2024-03-10T14:30:00Z',
+    read: true,
+  },
+  {
+    id: '2',
+    senderId: '1',
+    receiverId: '2',
+    content: 'Yes! Can\'t wait. It looks like perfect weather for it.',
+    timestamp: '2024-03-10T14:35:00Z',
+    read: true,
+  },
+  {
+    id: '3',
+    senderId: '2',
+    receiverId: '1',
+    content: 'Awesome! Want to grab coffee after?',
+    timestamp: '2024-03-10T14:40:00Z',
+    read: false,
+  },
+  {
+    id: '4',
+    senderId: '3',
+    receiverId: '1',
+    content: 'Thanks for coming to jazz night! Hope you enjoyed the music.',
+    timestamp: '2024-03-09T22:15:00Z',
+    read: true,
+  },
+  {
+    id: '5',
+    senderId: '1',
+    receiverId: '3',
+    content: 'It was incredible! The saxophone player was amazing. When\'s the next one?',
+    timestamp: '2024-03-09T22:20:00Z',
+    read: true,
+  },
+  {
+    id: '6',
+    senderId: '3',
+    receiverId: '1',
+    content: 'Next month! I\'ll send you the details when we announce it.',
+    timestamp: '2024-03-09T22:25:00Z',
+    read: false,
+  },
+];
+
+// Mock Conversations
+export const mockConversations: Conversation[] = [
+  {
+    id: '1-2',
+    participantIds: ['1', '2'],
+    lastMessage: {
+      id: '3',
+      senderId: '2',
+      receiverId: '1',
+      content: 'Awesome! Want to grab coffee after?',
+      timestamp: '2024-03-10T14:40:00Z',
+      read: false,
+    },
+    lastActivity: '2024-03-10T14:40:00Z',
+    unreadCount: 1,
+  },
+  {
+    id: '1-3',
+    participantIds: ['1', '3'],
+    lastMessage: {
+      id: '6',
+      senderId: '3',
+      receiverId: '1',
+      content: 'Next month! I\'ll send you the details when we announce it.',
+      timestamp: '2024-03-09T22:25:00Z',
+      read: false,
+    },
+    lastActivity: '2024-03-09T22:25:00Z',
+    unreadCount: 1,
+  },
+];
+
 // Helper functions
 export const getEventById = (id: string): Event | undefined => {
   return mockEvents.find(event => event.id === id);
@@ -370,4 +559,28 @@ export const getEventsByCity = (cityName: string): Event[] => {
 
 export const getEventsByCategory = (category: EventCategory): Event[] => {
   return mockEvents.filter(event => event.category === category);
+};
+
+export const getConversationById = (id: string): Conversation | undefined => {
+  return mockConversations.find(conv => conv.id === id);
+};
+
+export const getConversationByParticipants = (userId1: string, userId2: string): Conversation | undefined => {
+  return mockConversations.find(conv =>
+    conv.participantIds.includes(userId1) && conv.participantIds.includes(userId2)
+  );
+};
+
+export const getMessagesForConversation = (conversationId: string): Message[] => {
+  return mockMessages.filter(message => {
+    const conv = getConversationById(conversationId);
+    if (!conv) return false;
+    return conv.participantIds.includes(message.senderId) &&
+           conv.participantIds.includes(message.receiverId);
+  }).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+};
+
+export const getUserConversations = (userId: string): Conversation[] => {
+  return mockConversations.filter(conv => conv.participantIds.includes(userId))
+    .sort((a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime());
 };
