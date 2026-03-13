@@ -58,14 +58,14 @@ export default function MessagePage({ params }: MessagePageProps) {
 
     return (
       <div className={`flex ${isFromCurrentUser ? 'justify-end' : 'justify-start'} mb-4`}>
-        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+        <div className={`max-w-xs lg:max-w-md px-5 py-3 rounded-2xl shadow-sm ${
           isFromCurrentUser
-            ? 'bg-primary text-deep'
-            : 'bg-gray-100 text-text'
+            ? 'bg-primary text-white'
+            : 'bg-white border border-gray-200 text-text'
         }`}>
-          <p className="text-sm">{message.content}</p>
-          <p className={`text-xs mt-1 ${
-            isFromCurrentUser ? 'text-deep/70' : 'text-muted'
+          <p className="text-sm leading-relaxed">{message.content}</p>
+          <p className={`text-xs mt-2 font-medium ${
+            isFromCurrentUser ? 'text-white/70' : 'text-gray-500'
           }`}>
             {formatMessageTime(message.timestamp)}
           </p>
@@ -77,86 +77,92 @@ export default function MessagePage({ params }: MessagePageProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white border-b border-gray-200 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm border-b border-gray-100 px-6 py-4">
+        <div className="flex items-center justify-between max-w-6xl mx-auto">
+          <div className="flex items-center space-x-4">
             <Link
               href="/messages"
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-3 hover:bg-gray-100 rounded-2xl transition-all hover:scale-105"
             >
               <ArrowLeft className="w-5 h-5 text-text" />
             </Link>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <Image
                 src={otherUser.avatar}
                 alt={otherUser.name}
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full"
+                width={48}
+                height={48}
+                className="w-12 h-12 rounded-2xl object-cover"
               />
               <div>
-                <h1 className="font-semibold text-text">{otherUser.name}</h1>
-                <p className="text-xs text-muted">{otherUser.city}</p>
+                <h1 className="text-xl font-bold text-text">{otherUser.name}</h1>
+                <p className="text-sm text-gray-600 font-medium">{otherUser.city}</p>
               </div>
             </div>
           </div>
 
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <MoreVertical className="w-5 h-5 text-muted" />
+          <button className="p-3 hover:bg-gray-100 rounded-2xl transition-all hover:scale-105">
+            <MoreVertical className="w-5 h-5 text-gray-600" />
           </button>
         </div>
       </header>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 pb-20 md:pb-4">
-        {messages.length > 0 ? (
-          <div className="space-y-1">
-            {messages.map(message => (
-              <MessageBubble key={message.id} message={message} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <Image
-              src={otherUser.avatar}
-              alt={otherUser.name}
-              width={80}
-              height={80}
-              className="w-20 h-20 rounded-full mx-auto mb-4"
-            />
-            <h3 className="text-lg font-medium text-text mb-2">
-              Start a conversation with {otherUser.name}
-            </h3>
-            <p className="text-sm text-muted mb-4">
-              Say hello and break the ice! You both share interests in {otherUser.interests.slice(0, 2).join(' and ')}.
-            </p>
-          </div>
-        )}
+      <div className="flex-1 overflow-y-auto px-6 py-6 pb-20 md:pb-6">
+        <div className="max-w-4xl mx-auto">
+          {messages.length > 0 ? (
+            <div className="space-y-2">
+              {messages.map(message => (
+                <MessageBubble key={message.id} message={message} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Image
+                  src={otherUser.avatar}
+                  alt={otherUser.name}
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-xl object-cover"
+                />
+              </div>
+              <h3 className="text-2xl font-semibold text-text mb-3">
+                Start a conversation with {otherUser.name}
+              </h3>
+              <p className="text-gray-600 max-w-md mx-auto">
+                Say hello and break the ice! You both share interests in {otherUser.interests.slice(0, 2).join(' and ')}.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Message Input */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
-        <form onSubmit={handleSendMessage} className="flex items-center space-x-3">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 px-4 py-3 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-          />
-          <button
-            type="submit"
-            disabled={!newMessage.trim()}
-            className={`p-3 rounded-full transition-colors ${
-              newMessage.trim()
-                ? 'bg-primary text-deep hover:bg-accent'
-                : 'bg-gray-100 text-muted cursor-not-allowed'
-            }`}
-          >
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
+      <div className="sticky bottom-0 bg-white/80 backdrop-blur-sm border-t border-gray-100 px-6 py-4">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSendMessage} className="flex items-center space-x-4">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type a message..."
+              className="flex-1 px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition-all text-lg"
+            />
+            <button
+              type="submit"
+              disabled={!newMessage.trim()}
+              className={`p-4 rounded-2xl transition-all hover:scale-105 shadow-lg ${
+                newMessage.trim()
+                  ? 'bg-primary text-white hover:bg-accent shadow-primary/25'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-gray-200/50'
+              }`}
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

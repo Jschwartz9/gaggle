@@ -20,8 +20,8 @@ export default function BottomNav() {
   return (
     <>
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 md:hidden z-50">
-        <div className="flex items-center justify-between">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100 px-6 py-3 md:hidden z-50">
+        <div className="flex items-center justify-between max-w-md mx-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const IconComponent = item.icon;
@@ -31,9 +31,9 @@ export default function BottomNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex flex-col items-center justify-center w-12 h-12 bg-primary rounded-full shadow-lg"
+                  className="flex flex-col items-center justify-center w-14 h-14 bg-primary rounded-2xl shadow-xl shadow-primary/25 -mt-2"
                 >
-                  <IconComponent className="w-6 h-6 text-deep" />
+                  <IconComponent className="w-6 h-6 text-white" />
                 </Link>
               );
             }
@@ -42,12 +42,12 @@ export default function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center p-2 min-w-0 flex-1 ${
-                  isActive ? 'text-primary' : 'text-muted'
+                className={`flex flex-col items-center justify-center p-3 min-w-0 flex-1 rounded-2xl transition-all duration-200 ${
+                  isActive ? 'bg-primary/10' : 'hover:bg-gray-50'
                 }`}
               >
-                <IconComponent className={`w-6 h-6 ${isActive ? 'text-primary' : 'text-muted'}`} />
-                <span className={`text-xs mt-1 ${isActive ? 'text-primary' : 'text-muted'}`}>
+                <IconComponent className={`w-6 h-6 ${isActive ? 'text-primary' : 'text-gray-400'}`} />
+                <span className={`text-xs mt-1 font-medium ${isActive ? 'text-primary' : 'text-gray-400'}`}>
                   {item.label}
                 </span>
               </Link>
@@ -57,20 +57,20 @@ export default function BottomNav() {
       </nav>
 
       {/* Desktop Left Sidebar */}
-      <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 p-6 flex-col z-40">
+      <nav className="hidden md:flex fixed left-0 top-0 h-full w-72 bg-white border-r border-gray-100 p-8 flex-col z-40">
         {/* Logo */}
-        <div className="mb-8">
+        <div className="mb-12">
           <Image
             src="/gaggle-logo.svg"
             alt="Gaggle Logo"
-            width={160}
+            width={180}
             height={60}
             className="h-12 w-auto"
           />
         </div>
 
         {/* Navigation Items */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const IconComponent = item.icon;
@@ -80,9 +80,9 @@ export default function BottomNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center space-x-3 p-3 bg-primary text-deep rounded-lg font-medium shadow-sm hover:shadow-md transition-shadow"
+                  className="flex items-center space-x-4 p-4 bg-primary text-white rounded-2xl font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-105"
                 >
-                  <IconComponent className="w-5 h-5" />
+                  <IconComponent className="w-6 h-6" />
                   <span>{item.label} Event</span>
                 </Link>
               );
@@ -92,14 +92,14 @@ export default function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                className={`flex items-center space-x-4 p-4 rounded-2xl transition-all ${
                   isActive
-                    ? 'bg-primary/10 text-primary font-medium'
-                    : 'text-muted hover:bg-gray-50'
+                    ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
                 }`}
               >
-                <IconComponent className="w-5 h-5" />
-                <span>{item.label}</span>
+                <IconComponent className="w-6 h-6" />
+                <span className="text-lg">{item.label}</span>
               </Link>
             );
           })}

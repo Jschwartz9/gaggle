@@ -36,40 +36,42 @@ export default function FriendsPage() {
   );
 
   const FriendCard = ({ user, type }: { user: User; type: 'friend' | 'suggestion' }) => (
-    <div className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
-      <div className="flex items-center space-x-3">
+    <div className="flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl hover:border-gray-200 hover:shadow-lg transition-all duration-200">
+      <div className="flex items-center space-x-4">
         <Image
           src={user.avatar}
           alt={user.name}
-          width={48}
-          height={48}
-          className="w-12 h-12 rounded-full"
+          width={56}
+          height={56}
+          className="w-14 h-14 rounded-2xl object-cover"
         />
-        <div>
-          <h3 className="font-medium text-text">{user.name}</h3>
-          <p className="text-xs text-muted">{user.bio}</p>
-          <div className="flex items-center space-x-2 mt-1">
-            <span className="text-xs text-muted">{user.city}</span>
-            {user.interests.slice(0, 2).map((interest, index) => (
-              <span key={index} className="text-xs bg-gray-100 text-muted px-2 py-0.5 rounded-full">
-                {interest}
-              </span>
-            ))}
+        <div className="flex-1">
+          <h3 className="font-semibold text-lg text-text mb-1">{user.name}</h3>
+          <p className="text-sm text-gray-600 mb-2 line-clamp-2">{user.bio}</p>
+          <div className="flex items-center space-x-3">
+            <span className="text-xs text-gray-500 font-medium">{user.city}</span>
+            <div className="flex space-x-1">
+              {user.interests.slice(0, 2).map((interest, index) => (
+                <span key={index} className="text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded-lg font-medium">
+                  {interest}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex space-x-2">
+      <div className="flex space-x-3">
         {type === 'friend' ? (
           <Link
             href={`/messages/${user.id}`}
-            className="flex items-center space-x-1 px-3 py-2 bg-primary text-deep rounded-lg text-sm font-medium hover:bg-accent transition-colors"
+            className="flex items-center space-x-2 px-4 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-accent transition-all hover:scale-105 shadow-lg shadow-primary/25"
           >
             <MessageCircle className="w-4 h-4" />
             <span>Message</span>
           </Link>
         ) : (
-          <button className="flex items-center space-x-1 px-3 py-2 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary hover:text-deep transition-colors">
+          <button className="flex items-center space-x-2 px-4 py-2.5 border-2 border-primary text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all hover:scale-105">
             <UserPlus className="w-4 h-4" />
             <span>Follow</span>
           </button>
@@ -81,130 +83,143 @@ export default function FriendsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Main Content (with padding for desktop sidebar) */}
-      <div className="md:pl-64">
+      <div className="md:pl-72">
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-background border-b border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-text">Friends</h1>
-            <div className="flex items-center space-x-2 text-sm text-muted">
-              <Users className="w-4 h-4" />
-              <span>{friends.length} friends</span>
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm border-b border-gray-100 px-6 py-6">
+          <div className="flex items-center justify-between max-w-6xl mx-auto">
+            <div>
+              <h1 className="text-3xl font-bold text-text mb-1">Friends</h1>
+              <p className="text-gray-600">Connect with people who share your interests</p>
+            </div>
+            <div className="flex items-center space-x-3 bg-primary/10 px-4 py-2 rounded-2xl">
+              <Users className="w-5 h-5 text-primary" />
+              <span className="text-primary font-semibold">{friends.length} friends</span>
             </div>
           </div>
         </header>
 
         {/* Search Bar */}
-        <div className="p-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted" />
-            <input
-              type="text"
-              placeholder="Search people..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+        <div className="px-6 py-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="relative max-w-md">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search people..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm text-lg"
+              />
+            </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="px-4 mb-4">
-          <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setActiveTab('friends')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'friends'
-                  ? 'bg-white text-text shadow-sm'
-                  : 'text-muted hover:text-text'
-              }`}
-            >
-              Friends ({friends.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('suggestions')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'suggestions'
-                  ? 'bg-white text-text shadow-sm'
-                  : 'text-muted hover:text-text'
-              }`}
-            >
-              Suggestions ({suggestions.length})
-            </button>
+        <div className="px-6 mb-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex space-x-2 bg-gray-50 rounded-2xl p-2 max-w-sm">
+              <button
+                onClick={() => setActiveTab('friends')}
+                className={`flex-1 py-3 px-6 rounded-xl text-sm font-semibold transition-all ${
+                  activeTab === 'friends'
+                    ? 'bg-white text-text shadow-sm'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Friends ({friends.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('suggestions')}
+                className={`flex-1 py-3 px-6 rounded-xl text-sm font-semibold transition-all ${
+                  activeTab === 'suggestions'
+                    ? 'bg-white text-text shadow-sm'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Suggestions ({suggestions.length})
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Content */}
-        <div className="px-4 pb-20 md:pb-4">
-          {activeTab === 'friends' ? (
-            <div className="space-y-3">
-              {searchQuery && (
-                <p className="text-sm text-muted mb-3">
-                  {filteredFriends.length} result{filteredFriends.length !== 1 ? 's' : ''} for "{searchQuery}"
-                </p>
-              )}
-
-              {filteredFriends.length > 0 ? (
-                filteredFriends.map(user => (
-                  <FriendCard key={user.id} user={user} type="friend" />
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <Users className="w-12 h-12 text-muted mx-auto mb-3" />
-                  <h3 className="text-lg font-medium text-text mb-2">
-                    {searchQuery ? 'No friends found' : 'No friends yet'}
-                  </h3>
-                  <p className="text-sm text-muted mb-4">
-                    {searchQuery
-                      ? 'Try adjusting your search terms'
-                      : 'Start following people to see them here'
-                    }
+        <div className="px-6 pb-24 md:pb-8">
+          <div className="max-w-6xl mx-auto">
+            {activeTab === 'friends' ? (
+              <div className="space-y-4">
+                {searchQuery && (
+                  <p className="text-sm text-gray-600 mb-4">
+                    {filteredFriends.length} result{filteredFriends.length !== 1 ? 's' : ''} for "{searchQuery}"
                   </p>
-                  {!searchQuery && (
-                    <button
-                      onClick={() => setActiveTab('suggestions')}
-                      className="px-4 py-2 bg-primary text-deep rounded-lg font-medium"
-                    >
-                      Discover People
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {searchQuery && (
-                <p className="text-sm text-muted mb-3">
-                  {filteredSuggestions.length} result{filteredSuggestions.length !== 1 ? 's' : ''} for "{searchQuery}"
-                </p>
-              )}
+                )}
 
-              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-4">
-                <h3 className="font-medium text-text mb-1">People You Might Know</h3>
-                <p className="text-sm text-muted">
-                  Based on your interests and events you've attended
-                </p>
+                {filteredFriends.length > 0 ? (
+                  filteredFriends.map(user => (
+                    <FriendCard key={user.id} user={user} type="friend" />
+                  ))
+                ) : (
+                  <div className="text-center py-16">
+                    <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <Users className="w-10 h-10 text-gray-400" />
+                    </div>
+                    <h3 className="text-2xl font-semibold text-text mb-3">
+                      {searchQuery ? 'No friends found' : 'No friends yet'}
+                    </h3>
+                    <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                      {searchQuery
+                        ? 'Try adjusting your search terms'
+                        : 'Start following people to see them here and build your network'
+                      }
+                    </p>
+                    {!searchQuery && (
+                      <button
+                        onClick={() => setActiveTab('suggestions')}
+                        className="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-accent transition-all hover:scale-105 shadow-lg shadow-primary/25"
+                      >
+                        Discover People
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
+            ) : (
+              <div className="space-y-4">
+                {searchQuery && (
+                  <p className="text-sm text-gray-600 mb-4">
+                    {filteredSuggestions.length} result{filteredSuggestions.length !== 1 ? 's' : ''} for "{searchQuery}"
+                  </p>
+                )}
 
-              {filteredSuggestions.length > 0 ? (
-                filteredSuggestions.map(user => (
-                  <FriendCard key={user.id} user={user} type="suggestion" />
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <UserPlus className="w-12 h-12 text-muted mx-auto mb-3" />
-                  <h3 className="text-lg font-medium text-text mb-2">
-                    No suggestions found
-                  </h3>
-                  <p className="text-sm text-muted">
-                    {searchQuery
-                      ? 'Try different search terms'
-                      : 'Check back later for more suggestions'
-                    }
+                <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/10 rounded-2xl p-6 mb-6">
+                  <h3 className="text-lg font-semibold text-text mb-2">People You Might Know</h3>
+                  <p className="text-gray-600">
+                    Based on your interests and events you've attended
                   </p>
                 </div>
-              )}
-            </div>
-          )}
+
+                {filteredSuggestions.length > 0 ? (
+                  filteredSuggestions.map(user => (
+                    <FriendCard key={user.id} user={user} type="suggestion" />
+                  ))
+                ) : (
+                  <div className="text-center py-16">
+                    <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <UserPlus className="w-10 h-10 text-gray-400" />
+                    </div>
+                    <h3 className="text-2xl font-semibold text-text mb-3">
+                      No suggestions found
+                    </h3>
+                    <p className="text-gray-600 max-w-md mx-auto">
+                      {searchQuery
+                        ? 'Try different search terms'
+                        : 'Check back later for more suggestions based on your activity'
+                      }
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

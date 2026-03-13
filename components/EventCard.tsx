@@ -41,68 +41,80 @@ export default function EventCard({ event }: EventCardProps) {
   });
 
   return (
-    <Link href={`/events/${event.id}`}>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+    <Link href={`/events/${event.id}`} className="group block">
+      <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-black/5 transition-all duration-300 group-hover:-translate-y-1">
         {/* Hero Image */}
-        <div className="relative w-full h-48">
+        <div className="relative w-full h-52">
           <Image
             src={event.imageUrl}
             alt={event.title}
             fill
             className="object-cover"
           />
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+
           {/* Category Tag */}
-          <div className="absolute top-3 left-3">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${categoryColors[event.category] || 'bg-gray-100 text-gray-800'}`}>
+          <div className="absolute top-4 left-4">
+            <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border border-white/20 ${categoryColors[event.category] || 'bg-gray-100 text-gray-800'}`}>
               {event.category}
             </span>
           </div>
 
           {/* Featured/Sponsored Badges */}
-          <div className="absolute top-3 right-3 flex flex-col space-y-2">
+          <div className="absolute top-4 right-4 flex flex-col space-y-2">
             {event.featured && (
-              <span className="flex items-center space-x-1 px-2 py-1 bg-primary text-deep rounded-full text-xs font-medium">
-                <Star className="w-3 h-3" />
+              <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary text-white rounded-xl text-xs font-semibold shadow-lg shadow-primary/25">
+                <Star className="w-3 h-3 fill-current" />
                 <span>Featured</span>
               </span>
             )}
             {event.sponsored && (
-              <span className="flex items-center space-x-1 px-2 py-1 bg-yellow-500 text-white rounded-full text-xs font-medium">
+              <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-yellow-500 text-white rounded-xl text-xs font-semibold shadow-lg">
                 <DollarSign className="w-3 h-3" />
                 <span>Sponsored</span>
               </span>
             )}
           </div>
+
+          {/* Price Badge */}
+          <div className="absolute bottom-4 right-4">
+            <span className="px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-xl text-sm font-bold text-text shadow-sm">
+              {formatPrice(event.price)}
+            </span>
+          </div>
         </div>
 
         {/* Card Content */}
-        <div className="p-4">
+        <div className="p-5">
           {/* Event Title */}
-          <h3 className="font-bold text-lg text-text mb-2 line-clamp-1">{event.title}</h3>
+          <h3 className="font-bold text-xl text-text mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+            {event.title}
+          </h3>
 
           {/* Date & Time */}
-          <div className="flex items-center text-muted text-sm mb-2">
-            <Calendar className="w-4 h-4 mr-1" />
-            {formatDate(event.date, event.time)}
+          <div className="flex items-center text-gray-600 text-sm mb-2">
+            <Calendar className="w-4 h-4 mr-2 text-primary" />
+            <span className="font-medium">{formatDate(event.date, event.time)}</span>
           </div>
 
           {/* Location */}
-          <div className="flex items-center text-muted text-sm mb-3">
-            <MapPin className="w-4 h-4 mr-1" />
-            {event.location.neighborhood}
+          <div className="flex items-center text-gray-600 text-sm mb-4">
+            <MapPin className="w-4 h-4 mr-2 text-primary" />
+            <span>{event.location.neighborhood}</span>
           </div>
 
-          {/* Price and Attendees */}
+          {/* Attendees */}
           <div className="flex items-center justify-between">
-            {/* Price */}
-            <span className="font-semibold text-text">{formatPrice(event.price)}</span>
-
-            {/* Attendees */}
             <div className="flex items-center">
               {/* Avatar Stack */}
-              <div className="flex -space-x-2 mr-2">
+              <div className="flex -space-x-3">
                 {attendeeAvatars.map((avatar, index) => (
-                  <div key={index} className="relative w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                  <div
+                    key={index}
+                    className="relative w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm"
+                  >
                     <Image
                       src={avatar}
                       alt={`Attendee ${index + 1}`}
@@ -113,7 +125,14 @@ export default function EventCard({ event }: EventCardProps) {
                 ))}
               </div>
               {/* Count */}
-              <span className="text-sm text-muted">{event.attendeeIds.length} going</span>
+              <span className="text-sm text-gray-600 ml-3 font-medium">
+                {event.attendeeIds.length} going
+              </span>
+            </div>
+
+            {/* Join Indicator */}
+            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <span className="text-primary text-xs font-bold">→</span>
             </div>
           </div>
         </div>

@@ -88,18 +88,18 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Main Content (with padding for desktop sidebar) */}
-      <div className="md:pl-64">
+      <div className="md:pl-72">
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-background border-b border-gray-200 p-4">
-          <div className="flex items-center justify-between">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm border-b border-gray-100 px-6 py-4">
+          <div className="flex items-center justify-between max-w-7xl mx-auto">
             {/* Logo */}
             <div className="flex items-center">
               <Image
                 src="/gaggle-logo.svg"
                 alt="Gaggle Logo"
-                width={120}
-                height={40}
-                className="h-8 w-auto"
+                width={140}
+                height={44}
+                className="h-9 w-auto"
               />
             </div>
 
@@ -113,127 +113,148 @@ export default function HomePage() {
 
         {/* Featured & Sponsored Events Section */}
         {sponsoredFeaturedEvents.length > 0 && (
-          <section className="p-4 bg-gradient-to-r from-primary/5 to-accent/5">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold text-text">Featured Events</h2>
-              <span className="text-xs bg-primary text-deep px-2 py-1 rounded-full font-medium">
-                Don't Miss
-              </span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {sponsoredFeaturedEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
+          <section className="px-6 py-8 bg-gradient-to-br from-primary/3 via-accent/2 to-transparent">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-text mb-1">Featured Events</h2>
+                  <p className="text-muted text-sm">Hand-picked experiences you won't want to miss</p>
+                </div>
+                <span className="bg-primary text-white px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide">
+                  Don't Miss
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sponsoredFeaturedEvents.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
             </div>
           </section>
         )}
 
         {/* Hot This Weekend / Curated Events Section */}
-        <section className="p-4">
-          {selectedCity === 'Lexington' ? (
-            <>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-bold text-text">Curated for Lexington</h2>
-                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
-                  Hand-picked events
-                </span>
+        <section className="px-6 py-8">
+          <div className="max-w-7xl mx-auto">
+            {selectedCity === 'Lexington' ? (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-text mb-1">Curated for Lexington</h2>
+                    <p className="text-muted text-sm">
+                      Specially selected experiences that showcase the best of Lexington's charm
+                    </p>
+                  </div>
+                  <span className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-semibold">
+                    Hand-picked
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-text mb-1">Hot This Weekend</h2>
+                <p className="text-muted text-sm">Popular events happening near you</p>
               </div>
-              <p className="text-sm text-muted mb-4">
-                Specially selected experiences that showcase the best of Lexington's charm and natural beauty.
-              </p>
-            </>
-          ) : (
-            <h2 className="text-lg font-bold text-text mb-3">Hot This Weekend</h2>
-          )}
-          <div className="flex space-x-4 overflow-x-auto pb-2">
-            {featuredEvents.map((event) => (
-              <div key={event.id} className="w-72 flex-shrink-0">
-                <EventCard event={event} />
-              </div>
-            ))}
+            )}
+            <div className="flex space-x-6 overflow-x-auto pb-4 scrollbar-hide">
+              {featuredEvents.map((event) => (
+                <div key={event.id} className="w-80 flex-shrink-0">
+                  <EventCard event={event} />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Filter Bar */}
-        <div className="sticky top-[73px] z-20 bg-background border-b border-gray-200 p-4">
-          <div className="flex items-center space-x-4 overflow-x-auto">
-            {/* Category Tabs */}
-            <div className="flex space-x-2 flex-shrink-0">
-              {categories.slice(0, 4).map((category) => (
+        <div className="sticky top-[85px] z-20 bg-white/90 backdrop-blur-sm border-b border-gray-100 px-6 py-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
+              {/* Category Tabs */}
+              <div className="flex space-x-3 flex-shrink-0">
+                {categories.slice(0, 4).map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
+                      activeCategory === category
+                        ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+
+              {/* Filter Button */}
+              <button
+                onClick={() => setIsFilterOpen(true)}
+                className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl border text-sm font-semibold transition-all ${
+                  hasActiveFilters
+                    ? 'border-primary bg-primary/10 text-primary shadow-sm'
+                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <Filter className="w-4 h-4" />
+                <span>Filter</span>
+                {hasActiveFilters && (
+                  <span className="w-2 h-2 bg-primary rounded-full"></span>
+                )}
+              </button>
+            </div>
+
+            {/* Additional Category Pills */}
+            <div className="flex space-x-3 mt-4 overflow-x-auto scrollbar-hide">
+              {categories.slice(4).map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                  className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                     activeCategory === category
-                      ? 'bg-primary text-deep'
-                      : 'bg-gray-100 text-muted hover:bg-gray-200'
+                      ? 'bg-primary text-white'
+                      : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                   }`}
                 >
                   {category}
                 </button>
               ))}
             </div>
-
-            {/* Filter Button */}
-            <button
-              onClick={() => setIsFilterOpen(true)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
-                hasActiveFilters
-                  ? 'border-primary bg-primary/10 text-primary'
-                  : 'border-gray-300 text-muted hover:border-gray-400'
-              }`}
-            >
-              <Filter className="w-4 h-4" />
-              <span>Filter</span>
-              {hasActiveFilters && (
-                <span className="w-2 h-2 bg-primary rounded-full"></span>
-              )}
-            </button>
-          </div>
-
-          {/* Additional Category Pills */}
-          <div className="flex space-x-2 mt-3 overflow-x-auto">
-            {categories.slice(4).map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-                  activeCategory === category
-                    ? 'bg-primary text-deep'
-                    : 'bg-gray-100 text-muted hover:bg-gray-200'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
           </div>
         </div>
 
         {/* Events Grid */}
-        <section className="p-4 pb-20 md:pb-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-text">
-              Events in {selectedCity}
-            </h2>
-            <span className="text-sm text-muted">
-              {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''}
-            </span>
-          </div>
+        <section className="px-6 py-8 pb-24 md:pb-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-text mb-1">
+                  Events in {selectedCity}
+                </h2>
+                <p className="text-muted text-sm">
+                  {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} available
+                </p>
+              </div>
+            </div>
 
-          {filteredEvents.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted text-lg mb-2">No events found</p>
-              <p className="text-sm text-muted">
-                Try adjusting your filters or check back later
-              </p>
-            </div>
-          )}
+            {filteredEvents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredEvents.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  <span className="text-2xl">🎉</span>
+                </div>
+                <h3 className="text-xl font-semibold text-text mb-2">No events found</h3>
+                <p className="text-muted max-w-md mx-auto">
+                  Try adjusting your filters or check back later for new events in {selectedCity}
+                </p>
+              </div>
+            )}
+          </div>
         </section>
       </div>
 
