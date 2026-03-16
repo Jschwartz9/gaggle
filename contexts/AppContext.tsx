@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import { Event, User } from '@/lib/types';
-import { currentUser, getFriendsListForUser, getFriendsAttendingEvent, getCurrentUserWithUpdatedRSVPs } from '@/lib/mockData';
+import { currentUser, getFriendsListForUser, getFriendsAttendingEvent, getCurrentUserWithUpdatedRSVPs, addNewEvent } from '@/lib/mockData';
 
 // State types
 interface AppState {
@@ -31,7 +31,8 @@ type AppAction =
   | { type: 'SET_LOADING'; loading: boolean }
   | { type: 'SET_MAP_VIEW'; isMapView: boolean }
   | { type: 'SET_SEARCH_QUERY'; query: string }
-  | { type: 'LOAD_SAVED_STATE' };
+  | { type: 'LOAD_SAVED_STATE' }
+  | { type: 'ADD_NEW_EVENT'; event: Event };
 
 // Initial state
 const initialState: AppState = {
@@ -104,6 +105,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
     }
 
+    case 'ADD_NEW_EVENT': {
+      // The event is already added to mockEvents by the addNewEvent function
+      // This action can be used to trigger UI updates if needed
+      return state;
+    }
+
     default:
       return state;
   }
@@ -127,6 +134,7 @@ const AppContext = createContext<{
   getFriendsRSVPForEvent: (event: Event) => User[];
   getCurrentUserFriends: () => User[];
   getFriendsGoingToEvent: (eventId: string) => User[];
+  addEvent: (eventData: Omit<Event, 'id' | 'createdAt' | 'attendeeIds'>) => Event;
 } | null>(null);
 
 // Provider component
@@ -241,6 +249,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return allFriendsGoing;
   };
 
+  const addEvent = (eventData: Omit<Event, 'id' | 'createdAt' | 'attendeeIds'>) => {
+    const newEvent = addNewEvent(eventData);
+    dispatch({ type: 'ADD_NEW_EVENT', event: newEvent });
+    return newEvent;
+  };
+
   const value = {
     state,
     dispatch,
@@ -258,6 +272,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     getFriendsRSVPForEvent,
     getCurrentUserFriends,
     getFriendsGoingToEvent,
+    addEvent,
   };
 
   return (

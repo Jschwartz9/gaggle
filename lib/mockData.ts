@@ -690,3 +690,16 @@ export const getCurrentUserWithUpdatedRSVPs = (userRSVPs: Set<string>): User => 
 export const getAllUsers = (): User[] => {
   return [currentUser, ...mockUsers];
 };
+
+// Add new event to mock data (for demo purposes - in real app would be API call)
+export const addNewEvent = (eventData: Omit<Event, 'id' | 'createdAt' | 'attendeeIds'>): Event => {
+  const newEvent: Event = {
+    ...eventData,
+    id: `${mockEvents.length + 1}`,
+    createdAt: new Date().toISOString().split('T')[0],
+    attendeeIds: [], // Start with no attendees
+  };
+
+  mockEvents.unshift(newEvent); // Add to beginning of array for recent events
+  return newEvent;
+};
