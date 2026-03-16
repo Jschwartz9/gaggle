@@ -196,8 +196,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Main Content */}
-      <div className="pb-24 md:pb-8">
+      {/* Main Content (with padding for desktop sidebar) */}
+      <div className="md:pl-72 pb-24 md:pb-8">
         {/* Header */}
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm border-b border-gray-100 px-6 py-4">
           <div className="max-w-7xl mx-auto">
