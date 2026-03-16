@@ -73,6 +73,7 @@ export default function EventCard({ event }: EventCardProps) {
             src={event.imageUrl}
             alt={event.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
           />
 
@@ -180,6 +181,7 @@ export default function EventCard({ event }: EventCardProps) {
                       src={avatar}
                       alt={`Attendee ${index + 1}`}
                       fill
+                      sizes="32px"
                       className="object-cover"
                     />
                   </div>

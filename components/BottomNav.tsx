@@ -65,6 +65,7 @@ export default function BottomNav() {
             alt="Gaggle Logo"
             width={180}
             height={60}
+            loading="eager"
             className="h-12 w-auto"
           />
         </div>
