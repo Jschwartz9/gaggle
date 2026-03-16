@@ -53,7 +53,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Main Content (with padding for desktop sidebar) */}
-      <div className="md:pl-64 pb-20 md:pb-4">
+      <div className="md:pl-72 pb-20 md:pb-4">
         {/* Header with Back Button */}
         <div className="sticky top-0 z-30 bg-background p-4 border-b border-gray-200">
           <Link
