@@ -111,7 +111,7 @@ export default function CitySelector({ className = '' }: CitySelectorProps) {
           />
 
           {/* Dropdown Content */}
-          <div className="absolute top-full left-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 w-80 max-w-[90vw]">
+          <div className="absolute top-full right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 w-80 max-w-[calc(100vw-2rem)]">
             <div className="p-4">
               <h3 className="text-lg font-bold text-text mb-4">Select Your City</h3>
 
