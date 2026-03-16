@@ -160,13 +160,13 @@ export default function PostEventPage() {
       case 1:
         return formData.imageUrl !== '';
       case 2:
-        return formData.title.trim() !== '' && formData.category !== '';
+        return formData.title.trim() !== '';
       case 3:
         return formData.date !== '' && formData.time !== '' && formData.city !== '' && formData.neighborhood !== '';
       case 4:
         return true; // Price step is always valid (can be free)
       case 5:
-        return formData.ageGroup !== '';
+        return true; // Age group is always valid (has default value)
       case 6:
         return formData.description.trim() !== '';
       case 7:
