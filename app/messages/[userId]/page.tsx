@@ -1,27 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Send, MoreVertical } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { mockUsers, getConversationByParticipants, getMessagesForConversation } from '@/lib/mockData';
 
 interface MessagePageProps {
-  params: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }
 
 export default function MessagePage({ params }: MessagePageProps) {
   const [newMessage, setNewMessage] = useState('');
+  const [userId, setUserId] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+
+  // Resolve params Promise
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setUserId(resolvedParams.userId);
+      setLoading(false);
+    });
+  }, [params]);
 
   // Mock current user data - in reality this would come from auth context
   const currentUserId = '1';
-  const otherUser = mockUsers.find(u => u.id === params.userId);
+  const otherUser = mockUsers.find(u => u.id === userId);
 
   // Get conversation and messages
-  const conversation = getConversationByParticipants(currentUserId, params.userId);
+  const conversation = userId ? getConversationByParticipants(currentUserId, userId) : null;
   const messages = conversation ? getMessagesForConversation(conversation.id) : [];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-text mb-2">Loading...</h1>
+        </div>
+      </div>
+    );
+  }
 
   if (!otherUser) {
     return (

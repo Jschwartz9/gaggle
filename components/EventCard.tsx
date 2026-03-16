@@ -2,7 +2,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Event } from '@/lib/types';
 import { getUserById } from '@/lib/mockData';
-import { Calendar, MapPin, Star, DollarSign } from 'lucide-react';
+import { Calendar, MapPin, Star, DollarSign, Heart, Check, Navigation } from 'lucide-react';
+import { useApp } from '@/contexts/AppContext';
+import { motion } from 'framer-motion';
+import { formatDistance } from '@/lib/utils';
+import FriendsGoingIndicator from './FriendsGoingIndicator';
 
 interface EventCardProps {
   event: Event;
@@ -22,6 +26,14 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function EventCard({ event }: EventCardProps) {
+  const { toggleRSVP, toggleSavedEvent, isUserRSVP, isEventSaved, getRSVPCount, getFriendsGoingToEvent, state } = useApp();
+
+  const isRSVP = isUserRSVP(event.id);
+  const isSaved = isEventSaved(event.id);
+  const attendeeCount = getRSVPCount(event);
+  const showDistance = state.nearMeEnabled && event.distance !== undefined;
+  const friendsGoing = getFriendsGoingToEvent(event.id);
+
   const formatDate = (date: string, time: string) => {
     const eventDate = new Date(date);
     const dayName = eventDate.toLocaleDateString('en-US', { weekday: 'short' });
@@ -32,6 +44,18 @@ export default function EventCard({ event }: EventCardProps) {
   const formatPrice = (price: number | null) => {
     if (price === null) return 'Free';
     return `$${price}`;
+  };
+
+  const handleRSVP = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleRSVP(event.id);
+  };
+
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleSavedEvent(event.id);
   };
 
   // Get first 3 attendees for avatar preview
@@ -62,21 +86,38 @@ export default function EventCard({ event }: EventCardProps) {
             </span>
           </div>
 
-          {/* Featured/Sponsored Badges */}
-          <div className="absolute top-4 right-4 flex flex-col space-y-2">
-            {event.featured && (
-              <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary text-white rounded-xl text-xs font-semibold shadow-lg shadow-primary/25">
-                <Star className="w-3 h-3 fill-current" />
-                <span>Featured</span>
-              </span>
-            )}
-            {event.sponsored && (
-              <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-yellow-500 text-white rounded-xl text-xs font-semibold shadow-lg">
-                <DollarSign className="w-3 h-3" />
-                <span>Sponsored</span>
-              </span>
-            )}
+          {/* Bookmark Button */}
+          <div className="absolute top-4 right-4 z-10">
+            <motion.button
+              onClick={handleBookmark}
+              whileTap={{ scale: 0.9 }}
+              className={`p-2 rounded-xl backdrop-blur-sm border border-white/20 transition-all ${
+                isSaved
+                  ? 'bg-red-500 text-white'
+                  : 'bg-white/90 text-gray-600 hover:text-red-500'
+              }`}
+            >
+              <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+            </motion.button>
           </div>
+
+          {/* Featured/Sponsored Badges */}
+          {(event.featured || event.sponsored) && (
+            <div className="absolute top-16 left-4 flex flex-col space-y-2">
+              {event.featured && (
+                <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary text-white rounded-xl text-xs font-semibold shadow-lg shadow-primary/25">
+                  <Star className="w-3 h-3 fill-current" />
+                  <span>Featured</span>
+                </span>
+              )}
+              {event.sponsored && (
+                <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-yellow-500 text-white rounded-xl text-xs font-semibold shadow-lg">
+                  <DollarSign className="w-3 h-3" />
+                  <span>Sponsored</span>
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Price Badge */}
           <div className="absolute bottom-4 right-4">
@@ -93,6 +134,13 @@ export default function EventCard({ event }: EventCardProps) {
             {event.title}
           </h3>
 
+          {/* Friends Going Indicator */}
+          <FriendsGoingIndicator
+            friends={friendsGoing}
+            eventId={event.id}
+            eventTitle={event.title}
+          />
+
           {/* Date & Time */}
           <div className="flex items-center text-gray-600 text-sm mb-2">
             <Calendar className="w-4 h-4 mr-2 text-primary" />
@@ -100,12 +148,25 @@ export default function EventCard({ event }: EventCardProps) {
           </div>
 
           {/* Location */}
-          <div className="flex items-center text-gray-600 text-sm mb-4">
-            <MapPin className="w-4 h-4 mr-2 text-primary" />
-            <span>{event.location.neighborhood}</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center text-gray-600 text-sm">
+              <MapPin className="w-4 h-4 mr-2 text-primary" />
+              <span>{event.location.neighborhood}</span>
+            </div>
+            {showDistance && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center space-x-1 bg-primary/10 text-primary px-2.5 py-1 rounded-full text-xs font-semibold"
+              >
+                <Navigation className="w-3 h-3" />
+                <span>{formatDistance(event.distance!)}</span>
+              </motion.div>
+            )}
           </div>
 
-          {/* Attendees */}
+          {/* Attendees and RSVP */}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               {/* Avatar Stack */}
@@ -126,14 +187,36 @@ export default function EventCard({ event }: EventCardProps) {
               </div>
               {/* Count */}
               <span className="text-sm text-gray-600 ml-3 font-medium">
-                {event.attendeeIds.length} going
+                <motion.span
+                  key={attendeeCount}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {attendeeCount} going
+                </motion.span>
               </span>
             </div>
 
-            {/* Join Indicator */}
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-              <span className="text-primary text-xs font-bold">→</span>
-            </div>
+            {/* RSVP Button */}
+            <motion.button
+              onClick={handleRSVP}
+              whileTap={{ scale: 0.95 }}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                isRSVP
+                  ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                  : 'bg-primary/10 text-primary hover:bg-primary hover:text-white'
+              }`}
+            >
+              {isRSVP ? (
+                <div className="flex items-center space-x-1.5">
+                  <Check className="w-4 h-4" />
+                  <span>Going</span>
+                </div>
+              ) : (
+                <span>I'm Going</span>
+              )}
+            </motion.button>
           </div>
         </div>
       </div>

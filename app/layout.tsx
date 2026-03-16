@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppProvider } from "@/contexts/AppContext";
+import { MotionProvider } from "@/components/MotionProvider";
 
 export const metadata: Metadata = {
   title: "Gaggle",
@@ -14,7 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased" suppressHydrationWarning={true}>
-        {children}
+        <AppProvider>
+          <MotionProvider>
+            {children}
+          </MotionProvider>
+        </AppProvider>
       </body>
     </html>
   );

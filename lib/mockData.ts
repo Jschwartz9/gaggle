@@ -15,6 +15,21 @@ export const mockCities: City[] = [
   { id: 'lex', name: 'Lexington', state: 'VA', coordinates: { lat: 37.7844, lng: -79.4426 } },
 ];
 
+// Current user - this will be the logged-in user
+export const currentUser: User = {
+  id: 'current',
+  name: 'You',
+  age: 27,
+  bio: 'Social event discoverer',
+  avatar: 'https://picsum.photos/seed/currentuser/150/150',
+  interests: ['Food & Drink', 'Music', 'Arts & Culture', 'Networking'],
+  city: 'New York',
+  eventsAttending: ['1', '3', '5'],
+  eventsHosted: [],
+  following: ['1', '2', '3', '4', '5'], // Following Sarah, Marcus, Emma, Alex, Jordan
+  followers: ['1', '2', '3'],
+};
+
 // Mock Users (8 users, ages 22-30)
 export const mockUsers: User[] = [
   {
@@ -25,10 +40,10 @@ export const mockUsers: User[] = [
     avatar: 'https://picsum.photos/seed/sarah/150/150',
     interests: ['Arts & Culture', 'Food & Drink', 'Outdoors'],
     city: 'New York',
-    eventsAttending: ['1', '5'],
-    eventsHosted: ['1'],
-    following: ['2', '3'],
-    followers: ['2', '4', '5'],
+    eventsAttending: ['1', '5', '12'], // Added more events
+    eventsHosted: ['1', '12'],
+    following: ['2', '3', 'current'],
+    followers: ['2', '4', '5', 'current'],
   },
   {
     id: '2',
@@ -37,11 +52,11 @@ export const mockUsers: User[] = [
     bio: 'Tech professional who loves running',
     avatar: 'https://picsum.photos/seed/marcus/150/150',
     interests: ['Fitness', 'Networking', 'Outdoors'],
-    city: 'Denver',
-    eventsAttending: ['2', '4'],
+    city: 'New York', // Changed to NYC to create more friend overlap
+    eventsAttending: ['2', '4', '1', '15'], // Added more events including event 1
     eventsHosted: ['2'],
-    following: ['1', '3', '4'],
-    followers: ['1', '6'],
+    following: ['1', '3', '4', 'current'],
+    followers: ['1', '6', 'current'],
   },
   {
     id: '3',
@@ -50,11 +65,11 @@ export const mockUsers: User[] = [
     bio: 'Music lover & social butterfly',
     avatar: 'https://picsum.photos/seed/emma/150/150',
     interests: ['Music', 'Nightlife', 'Arts & Culture'],
-    city: 'Austin',
-    eventsAttending: ['3', '9'],
-    eventsHosted: ['3'],
-    following: ['1', '2', '7'],
-    followers: ['1', '2', '8'],
+    city: 'New York', // Changed to NYC for more overlap
+    eventsAttending: ['3', '9', '1', '5', '15'], // Added overlapping events
+    eventsHosted: ['3', '15'],
+    following: ['1', '2', '7', 'current'],
+    followers: ['1', '2', '8', 'current'],
   },
   {
     id: '4',
@@ -63,11 +78,11 @@ export const mockUsers: User[] = [
     bio: 'Startup founder & networking enthusiast',
     avatar: 'https://picsum.photos/seed/alex/150/150',
     interests: ['Networking', 'Food & Drink', 'Wellness'],
-    city: 'Chicago',
-    eventsAttending: ['4', '8'],
+    city: 'New York', // Changed to NYC for more overlap
+    eventsAttending: ['4', '8', '13'], // Added events
     eventsHosted: ['4'],
-    following: ['2', '5', '6'],
-    followers: ['1', '3', '7'],
+    following: ['2', '5', '6', 'current'],
+    followers: ['1', '3', '7', 'current'],
   },
   {
     id: '5',
@@ -77,10 +92,10 @@ export const mockUsers: User[] = [
     avatar: 'https://picsum.photos/seed/jordan/150/150',
     interests: ['Arts & Culture', 'Pop-ups & Markets', 'Wellness'],
     city: 'New York',
-    eventsAttending: ['1', '5'],
-    eventsHosted: ['5'],
-    following: ['1', '3', '8'],
-    followers: ['2', '4', '6'],
+    eventsAttending: ['1', '5', '14'], // Added more events
+    eventsHosted: ['5', '14'],
+    following: ['1', '3', '8', 'current'],
+    followers: ['2', '4', '6', 'current'],
   },
   {
     id: '6',
@@ -138,6 +153,10 @@ export const mockEvents: Event[] = [
       city: 'New York',
       neighborhood: 'Manhattan',
       address: '123 Rooftop Ave',
+      coordinates: {
+        lat: 40.7589,
+        lng: -73.9851,
+      },
     },
     price: 35,
     ageGroup: '21+' as AgeGroup,
@@ -159,6 +178,10 @@ export const mockEvents: Event[] = [
     location: {
       city: 'Denver',
       neighborhood: 'Rocky Mountain National Park',
+      coordinates: {
+        lat: 40.3428,
+        lng: -105.6836,
+      },
     },
     price: null, // Free
     ageGroup: 'All ages' as AgeGroup,
@@ -179,6 +202,10 @@ export const mockEvents: Event[] = [
       city: 'Austin',
       neighborhood: 'East Austin',
       address: '456 Music Lane',
+      coordinates: {
+        lat: 30.2637,
+        lng: -97.7157,
+      },
     },
     price: 15,
     ageGroup: '21+' as AgeGroup,
@@ -199,6 +226,10 @@ export const mockEvents: Event[] = [
       city: 'Chicago',
       neighborhood: 'River North',
       address: '789 Innovation Hub',
+      coordinates: {
+        lat: 41.8919,
+        lng: -87.6278,
+      },
     },
     price: null, // Free
     ageGroup: '25+' as AgeGroup,
@@ -220,6 +251,10 @@ export const mockEvents: Event[] = [
       city: 'New York',
       neighborhood: 'Brooklyn',
       address: 'Prospect Park',
+      coordinates: {
+        lat: 40.6602,
+        lng: -73.9690,
+      },
     },
     price: null, // Free
     ageGroup: 'All ages' as AgeGroup,
@@ -241,6 +276,10 @@ export const mockEvents: Event[] = [
       city: 'Miami',
       neighborhood: 'South Beach',
       address: '321 Dance Studio',
+      coordinates: {
+        lat: 25.7907,
+        lng: -80.1300,
+      },
     },
     price: 20,
     ageGroup: 'All ages' as AgeGroup,
@@ -260,6 +299,10 @@ export const mockEvents: Event[] = [
     location: {
       city: 'Washington DC',
       neighborhood: 'Georgetown Waterfront',
+      coordinates: {
+        lat: 38.9048,
+        lng: -77.0621,
+      },
     },
     price: 40,
     ageGroup: 'All ages' as AgeGroup,
@@ -279,6 +322,10 @@ export const mockEvents: Event[] = [
     location: {
       city: 'Nashville',
       neighborhood: 'Music City Center area',
+      coordinates: {
+        lat: 36.1581,
+        lng: -86.7759,
+      },
     },
     price: null, // Free
     ageGroup: 'All ages' as AgeGroup,
@@ -299,6 +346,10 @@ export const mockEvents: Event[] = [
       city: 'Los Angeles',
       neighborhood: 'West Hollywood',
       address: '654 Comedy Club',
+      coordinates: {
+        lat: 34.0900,
+        lng: -118.3617,
+      },
     },
     price: 10,
     ageGroup: '21+' as AgeGroup,
@@ -318,6 +369,10 @@ export const mockEvents: Event[] = [
     location: {
       city: 'Houston',
       neighborhood: 'Montrose District',
+      coordinates: {
+        lat: 29.7342,
+        lng: -95.3954,
+      },
     },
     price: 30,
     ageGroup: '21+' as AgeGroup,
@@ -338,6 +393,10 @@ export const mockEvents: Event[] = [
     location: {
       city: 'Lexington',
       neighborhood: 'Blue Ridge Parkway',
+      coordinates: {
+        lat: 37.7844,
+        lng: -79.4426,
+      },
     },
     price: 15,
     ageGroup: 'All ages' as AgeGroup,
@@ -358,6 +417,10 @@ export const mockEvents: Event[] = [
       city: 'Lexington',
       neighborhood: 'Historic Downtown',
       address: 'Washington & Lee University',
+      coordinates: {
+        lat: 37.7871,
+        lng: -79.4415,
+      },
     },
     price: null, // Free
     ageGroup: 'All ages' as AgeGroup,
@@ -378,6 +441,10 @@ export const mockEvents: Event[] = [
       city: 'Lexington',
       neighborhood: 'Countryside',
       address: 'Valley View Farm',
+      coordinates: {
+        lat: 37.7921,
+        lng: -79.4601,
+      },
     },
     price: 45,
     ageGroup: '21+' as AgeGroup,
@@ -398,6 +465,10 @@ export const mockEvents: Event[] = [
       city: 'Lexington',
       neighborhood: 'Downtown',
       address: 'Main Street Coffee Co.',
+      coordinates: {
+        lat: 37.7844,
+        lng: -79.4380,
+      },
     },
     price: 25,
     ageGroup: 'All ages' as AgeGroup,
@@ -418,6 +489,10 @@ export const mockEvents: Event[] = [
       city: 'Lexington',
       neighborhood: 'Main Street',
       address: 'Record Exchange',
+      coordinates: {
+        lat: 37.7851,
+        lng: -79.4390,
+      },
     },
     price: 20,
     ageGroup: '21+' as AgeGroup,
@@ -583,4 +658,35 @@ export const getMessagesForConversation = (conversationId: string): Message[] =>
 export const getUserConversations = (userId: string): Conversation[] => {
   return mockConversations.filter(conv => conv.participantIds.includes(userId))
     .sort((a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime());
+};
+
+// Friend-related helper functions
+export const getFriendsListForUser = (userId: string): User[] => {
+  const user = getUserById(userId);
+  if (!user) return [];
+
+  return user.following
+    .map(friendId => getUserById(friendId))
+    .filter((friend): friend is User => friend !== undefined);
+};
+
+export const getFriendsAttendingEvent = (eventId: string, userId: string): User[] => {
+  const event = getEventById(eventId);
+  const friends = getFriendsListForUser(userId);
+
+  if (!event) return [];
+
+  return friends.filter(friend => event.attendeeIds.includes(friend.id));
+};
+
+export const getCurrentUserWithUpdatedRSVPs = (userRSVPs: Set<string>): User => {
+  return {
+    ...currentUser,
+    eventsAttending: [...new Set([...currentUser.eventsAttending, ...Array.from(userRSVPs)])]
+  };
+};
+
+// Get all users including current user for context
+export const getAllUsers = (): User[] => {
+  return [currentUser, ...mockUsers];
 };

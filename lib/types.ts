@@ -32,6 +32,7 @@ export interface Event {
   createdAt: string;
   featured?: boolean; // Featured events appear prominently
   sponsored?: boolean; // Sponsored events have special badges
+  distance?: number; // Distance in miles when near me mode is active
 }
 
 // Location types
