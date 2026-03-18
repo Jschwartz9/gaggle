@@ -1308,13 +1308,16 @@ export const getPeopleYouMayKnow = (userId: string): User[] => {
       score += 5;
     }
 
+    const mutualFriendUsers = mutualFriends.map(id => getUserById(id)).filter(Boolean);
+    const sharedEventObjects = sharedEvents.map(id => getEventById(id)).filter(Boolean);
+
     return {
       user: candidate,
       score,
       sharedInterests,
-      mutualFriends: mutualFriends.map(id => getUserById(id)).filter(Boolean),
-      sharedEvents: sharedEvents.map(id => getEventById(id)).filter(Boolean),
-      reasonsToConnect: calculateConnectionReasons(candidate, user, sharedInterests, mutualFriends, sharedEvents)
+      mutualFriends: mutualFriendUsers,
+      sharedEvents: sharedEventObjects,
+      reasonsToConnect: calculateConnectionReasons(candidate, user, sharedInterests, mutualFriendUsers, sharedEventObjects)
     };
   });
 

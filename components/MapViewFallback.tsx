@@ -11,13 +11,18 @@ import Link from 'next/link';
 
 // Category color mapping
 const getCategoryColor = (category: EventCategory): string => {
-  const colors = {
+  const colors: Record<EventCategory, string> = {
     'Food & Drink': '#FF6A2A',
     'Nightlife': '#FF1744',
+    'Date Night': '#E91E63',
+    'Late Night': '#9C27B0',
+    'Brunch & Chill': '#FF9800',
     'Fitness': '#4CAF50',
     'Outdoors': '#2E7D32',
     'Arts & Culture': '#9C27B0',
     'Music': '#E91E63',
+    'Skills & Hobbies': '#00BCD4',
+    'Gaming & Tech': '#1976D2',
     'Networking': '#1976D2',
     'Wellness': '#00BCD4',
     'Sports': '#FF9800',
