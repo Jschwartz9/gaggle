@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef } from 'react';
-import Map, { Marker, Popup } from 'react-map-gl/mapbox';
+import Map, { Marker, Popup, NavigationControl, FullscreenControl, ScaleControl, GeolocateControl } from 'react-map-gl/mapbox';
 import { Event, EventCategory } from '@/lib/types';
 import { useApp } from '@/contexts/AppContext';
 import { mockEvents } from '@/lib/mockData';
-import { MapPin, Users, Clock, DollarSign } from 'lucide-react';
+import { MapPin, Users, Clock, DollarSign, Heart, Calendar, Navigation, Maximize2, Layers, Filter } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 
 // Category color mapping matching the existing design
 const getCategoryColor = (category: EventCategory): string => {
   const colors = {
-    'Food & Drink': '#FF6B35', // Primary orange
+    'Food & Drink': '#FF6A2A', // Orange accent color
     'Nightlife': '#FF1744',
     'Fitness': '#4CAF50',
     'Outdoors': '#2E7D32',
@@ -23,7 +24,7 @@ const getCategoryColor = (category: EventCategory): string => {
     'Sports': '#FF9800',
     'Pop-ups & Markets': '#795548',
   };
-  return colors[category] || '#FF6B35';
+  return colors[category] || '#FF6A2A';
 };
 
 interface MapViewProps {
@@ -31,9 +32,14 @@ interface MapViewProps {
 }
 
 const MapView = ({ className = '' }: MapViewProps) => {
-  const { state } = useApp();
+  const { state, toggleSavedEvent, toggleRSVP } = useApp();
   const mapRef = useRef<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [hoveredEvent, setHoveredEvent] = useState<Event | null>(null);
+  const [mapStyle, setMapStyle] = useState('mapbox://styles/mapbox/light-v11');
+  const [showCategoryFilter, setShowCategoryFilter] = useState(false);
+  const [visibleCategories, setVisibleCategories] = useState<Set<EventCategory>>(new Set());
+  const [isClusteringEnabled, setIsClusteringEnabled] = useState(true);
   const [viewState, setViewState] = useState({
     longitude: -74.0060,
     latitude: 40.7128,
@@ -42,11 +48,18 @@ const MapView = ({ className = '' }: MapViewProps) => {
 
   // Filter events for the current city and only those with coordinates
   const eventsWithCoordinates = useMemo(() => {
-    return mockEvents.filter(event =>
+    let events = mockEvents.filter(event =>
       event.location.city === state.selectedCity &&
       event.location.coordinates
     );
-  }, [state.selectedCity]);
+
+    // Apply category filter if categories are selected
+    if (visibleCategories.size > 0) {
+      events = events.filter(event => visibleCategories.has(event.category));
+    }
+
+    return events;
+  }, [state.selectedCity, visibleCategories]);
 
   // Get city center coordinates for initial view
   const cityCenter = useMemo(() => {
@@ -78,7 +91,57 @@ const MapView = ({ className = '' }: MapViewProps) => {
 
   const handleMarkerClick = useCallback((event: Event) => {
     setSelectedEvent(event);
+    // Animate to marker location
+    if (mapRef.current && event.location.coordinates) {
+      mapRef.current.flyTo({
+        center: [event.location.coordinates.lng, event.location.coordinates.lat],
+        zoom: 15,
+        duration: 1000
+      });
+    }
   }, []);
+
+  const handleMarkerHover = useCallback((event: Event | null) => {
+    setHoveredEvent(event);
+  }, []);
+
+  const handleBookmarkClick = useCallback((event: Event, e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleSavedEvent(event.id);
+  }, [toggleSavedEvent]);
+
+  const handleRSVPClick = useCallback((event: Event, e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleRSVP(event.id);
+  }, [toggleRSVP]);
+
+  const toggleCategoryVisibility = useCallback((category: EventCategory) => {
+    setVisibleCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const resetMapView = useCallback(() => {
+    if (mapRef.current) {
+      mapRef.current.flyTo({
+        center: [cityCenter.lng, cityCenter.lat],
+        zoom: state.selectedCity === 'Lexington' ? 13 : 12,
+        duration: 1000
+      });
+    }
+    setSelectedEvent(null);
+  }, [cityCenter, state.selectedCity]);
+
+  // Get unique categories from filtered events
+  const availableCategories = useMemo(() => {
+    return Array.from(new Set(eventsWithCoordinates.map(e => e.category)));
+  }, [eventsWithCoordinates]);
 
   const handleClosePopup = useCallback(() => {
     setSelectedEvent(null);
@@ -114,18 +177,45 @@ const MapView = ({ className = '' }: MapViewProps) => {
           >
             <motion.div
               initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              whileHover={{ scale: 1.1 }}
+              animate={{
+                scale: selectedEvent?.id === event.id ? 1.3 : hoveredEvent?.id === event.id ? 1.2 : 1
+              }}
+              whileHover={{ scale: 1.2 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="cursor-pointer"
+              className="cursor-pointer relative"
               onClick={() => handleMarkerClick(event)}
+              onMouseEnter={() => handleMarkerHover(event)}
+              onMouseLeave={() => handleMarkerHover(null)}
             >
               <div
-                className="w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center"
+                className={`w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center relative ${
+                  selectedEvent?.id === event.id ? 'ring-4 ring-primary/30' : ''
+                }`}
                 style={{ backgroundColor: getCategoryColor(event.category) }}
               >
                 <MapPin className="w-4 h-4 text-white" />
+                {event.featured && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full border border-white"></div>
+                )}
+                {event.sponsored && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border border-white"></div>
+                )}
               </div>
+
+              {/* Hover tooltip */}
+              <AnimatePresence>
+                {hoveredEvent?.id === event.id && !selectedEvent && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black/80 text-white text-sm rounded-lg whitespace-nowrap pointer-events-none z-50"
+                  >
+                    {event.title}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black/80"></div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </Marker>
         ))}
@@ -217,10 +307,42 @@ const MapView = ({ className = '' }: MapViewProps) => {
                     </div>
                   </div>
 
-                  {/* View Event Button */}
-                  <button className="w-full bg-primary text-white py-2 px-4 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-colors">
-                    View Event Details
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={(e) => handleBookmarkClick(selectedEvent, e)}
+                      className={`flex-1 flex items-center justify-center space-x-2 py-2 px-3 rounded-lg font-semibold text-sm transition-colors ${
+                        state.savedEvents.has(selectedEvent.id)
+                          ? 'bg-red-100 text-red-600 border border-red-200'
+                          : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+                      }`}
+                    >
+                      <Heart className={`w-4 h-4 ${
+                        state.savedEvents.has(selectedEvent.id) ? 'fill-current' : ''
+                      }`} />
+                      <span className="hidden sm:inline">Save</span>
+                    </button>
+
+                    <button
+                      onClick={(e) => handleRSVPClick(selectedEvent, e)}
+                      className={`flex-1 flex items-center justify-center space-x-2 py-2 px-3 rounded-lg font-semibold text-sm transition-colors ${
+                        state.userRSVPs.has(selectedEvent.id)
+                          ? 'bg-primary text-white'
+                          : 'bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20'
+                      }`}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span className="hidden sm:inline">
+                        {state.userRSVPs.has(selectedEvent.id) ? 'Going' : 'RSVP'}
+                      </span>
+                    </button>
+
+                    <Link href={`/events/${selectedEvent.id}`} className="flex-1">
+                      <button className="w-full bg-primary text-white py-2 px-3 rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors">
+                        View Details
+                      </button>
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Close Button */}
@@ -234,31 +356,146 @@ const MapView = ({ className = '' }: MapViewProps) => {
             </Popup>
           )}
         </AnimatePresence>
+        {/* Map Controls */}
+        <NavigationControl position="top-right" />
+        <FullscreenControl position="top-right" />
+        <GeolocateControl
+          position="top-right"
+          trackUserLocation={true}
+          showUserLocation={true}
+        />
+        <ScaleControl position="bottom-right" />
       </Map>
 
-      {/* Map Controls Overlay */}
-      <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-2">
-        <div className="text-sm font-semibold text-text mb-1">
-          {state.selectedCity}
+      {/* Enhanced Map Controls Overlay */}
+      <div className="absolute top-4 left-4 space-y-2">
+        {/* City Info Card */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 border border-gray-100">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-sm font-semibold text-text">
+              {state.selectedCity}
+            </div>
+            <button
+              onClick={resetMapView}
+              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              title="Reset map view"
+            >
+              <Navigation className="w-4 h-4 text-gray-600" />
+            </button>
+          </div>
+          <div className="text-xs text-muted">
+            {eventsWithCoordinates.length} event{eventsWithCoordinates.length !== 1 ? 's' : ''} visible
+          </div>
         </div>
-        <div className="text-xs text-muted">
-          {eventsWithCoordinates.length} events
+
+        {/* Map Style Selector */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-3 border border-gray-100">
+          <div className="text-xs font-semibold text-text mb-2">Map Style</div>
+          <div className="flex space-x-2">
+            {[
+              { key: 'mapbox://styles/mapbox/light-v11', name: 'Light', emoji: '☀️' },
+              { key: 'mapbox://styles/mapbox/dark-v11', name: 'Dark', emoji: '🌙' },
+              { key: 'mapbox://styles/mapbox/satellite-v9', name: 'Satellite', emoji: '🛰️' },
+            ].map((style) => (
+              <button
+                key={style.key}
+                onClick={() => setMapStyle(style.key)}
+                className={`flex flex-col items-center p-2 rounded-lg text-xs transition-colors ${
+                  mapStyle === style.key
+                    ? 'bg-primary text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                title={style.name}
+              >
+                <span className="text-base mb-1">{style.emoji}</span>
+                <span className="hidden sm:inline">{style.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* Category Filter Toggle */}
+        <button
+          onClick={() => setShowCategoryFilter(!showCategoryFilter)}
+          className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-3 border border-gray-100 w-full flex items-center justify-between hover:bg-white transition-colors"
+        >
+          <div className="flex items-center space-x-2">
+            <Filter className="w-4 h-4 text-primary" />
+            <span className="text-sm font-semibold text-text">Categories</span>
+          </div>
+          <span className={`text-xs transition-transform ${
+            showCategoryFilter ? 'rotate-180' : ''
+          }`}>▼</span>
+        </button>
       </div>
 
-      {/* Category Legend */}
-      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 max-w-xs">
-        <div className="text-sm font-semibold text-text mb-2">Event Categories</div>
-        <div className="grid grid-cols-2 gap-1 text-xs">
-          {Array.from(new Set(eventsWithCoordinates.map(e => e.category))).map(category => (
-            <div key={category} className="flex items-center">
-              <div
-                className="w-2 h-2 rounded-full mr-2"
-                style={{ backgroundColor: getCategoryColor(category) }}
-              />
-              <span className="text-muted truncate">{category}</span>
+      {/* Enhanced Category Filter Panel */}
+      <AnimatePresence>
+        {showCategoryFilter && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-[280px] left-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 p-4 max-w-xs z-10"
+          >
+            <div className="text-sm font-semibold text-text mb-3">Filter by Category</div>
+            <div className="space-y-2">
+              <button
+                onClick={() => setVisibleCategories(new Set())}
+                className="text-xs text-primary hover:text-primary/80 font-medium"
+              >
+                Clear all filters
+              </button>
+              {availableCategories.map(category => {
+                const isVisible = visibleCategories.size === 0 || visibleCategories.has(category);
+                const eventCount = eventsWithCoordinates.filter(e => e.category === category).length;
+                return (
+                  <div key={category} className="flex items-center justify-between">
+                    <button
+                      onClick={() => toggleCategoryVisibility(category)}
+                      className={`flex items-center space-x-2 text-xs transition-colors ${
+                        isVisible ? 'text-text' : 'text-gray-400'
+                      }`}
+                    >
+                      <div
+                        className={`w-3 h-3 rounded-full transition-all ${
+                          isVisible ? 'scale-100' : 'scale-75 opacity-50'
+                        }`}
+                        style={{ backgroundColor: getCategoryColor(category) }}
+                      />
+                      <span className="truncate flex-1">{category}</span>
+                    </button>
+                    <span className={`text-xs font-medium ${
+                      isVisible ? 'text-primary' : 'text-gray-400'
+                    }`}>
+                      {eventCount}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Event Count and Quick Stats */}
+      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 border border-gray-100 max-w-xs">
+        <div className="text-sm font-semibold text-text mb-2">Map Overview</div>
+        <div className="space-y-2 text-xs">
+          <div className="flex justify-between">
+            <span className="text-muted">Total Events:</span>
+            <span className="font-medium text-text">{eventsWithCoordinates.length}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted">Categories:</span>
+            <span className="font-medium text-text">{availableCategories.length}</span>
+          </div>
+          {state.userLocation && (
+            <div className="flex justify-between">
+              <span className="text-muted">Your Location:</span>
+              <span className="font-medium text-primary">📍 Visible</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

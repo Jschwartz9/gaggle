@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Plus, Bell, User, Users } from 'lucide-react';
+import { Home, Search, Plus, User, Users } from 'lucide-react';
 
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/explore', icon: Search, label: 'Explore' },
   { href: '/friends', icon: Users, label: 'Friends' },
   { href: '/post', icon: Plus, label: 'Post', isProminent: true },
-  { href: '/notifications', icon: Bell, label: 'Notifications' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];
 

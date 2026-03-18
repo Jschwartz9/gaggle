@@ -10,7 +10,7 @@ import CitySelector from '@/components/CitySelector';
 import SearchBar from '@/components/SearchBar';
 import BottomNav from '@/components/BottomNav';
 import NearMeButton from '@/components/NearMeButton';
-import MapView from '@/components/MapView';
+import EnhancedMapView from '@/components/EnhancedMapView';
 import MapToggleButton from '@/components/MapToggleButton';
 import { mockEvents, mockCities } from '@/lib/mockData';
 import { EventFilters, EventCategory } from '@/lib/types';
@@ -18,8 +18,6 @@ import { useApp } from '@/contexts/AppContext';
 import { calculateDistance } from '@/lib/utils';
 import { searchEvents } from '@/lib/searchUtils';
 import {
-  FeaturedEventsSkeleton,
-  HotThisWeekendSkeleton,
   MainEventsGridSkeleton,
   FilterBarSkeleton
 } from '@/components/SkeletonSections';
@@ -100,26 +98,6 @@ export default function HomePage() {
     return events;
   }, [state.selectedCity, state.searchQuery, activeCategory, filters, state.nearMeEnabled, state.userLocation]);
 
-  // Featured/sponsored events for top section
-  const sponsoredFeaturedEvents = useMemo(() => {
-    return mockEvents
-      .filter(event => event.location.city === state.selectedCity && (event.featured || event.sponsored))
-      .sort((a, b) => {
-        // Prioritize sponsored events first, then featured
-        if (a.sponsored && !b.sponsored) return -1;
-        if (!a.sponsored && b.sponsored) return 1;
-        return b.attendeeIds.length - a.attendeeIds.length;
-      })
-      .slice(0, 3);
-  }, [state.selectedCity]);
-
-  // Featured events for "Hot This Weekend"
-  const featuredEvents = useMemo(() => {
-    return mockEvents
-      .filter(event => event.location.city === state.selectedCity)
-      .sort((a, b) => b.attendeeIds.length - a.attendeeIds.length)
-      .slice(0, 5);
-  }, [state.selectedCity]);
 
   const hasActiveFilters = Object.values(filters).some(value => value !== 'Any') || activeCategory !== 'All' || state.searchQuery.trim();
 
@@ -180,8 +158,6 @@ export default function HomePage() {
           </header>
 
           {/* Skeleton Sections */}
-          <FeaturedEventsSkeleton />
-          <HotThisWeekendSkeleton selectedCity={state.selectedCity} />
           <FilterBarSkeleton />
           <MainEventsGridSkeleton selectedCity={state.selectedCity} />
         </div>
@@ -225,80 +201,6 @@ export default function HomePage() {
           </div>
         </header>
 
-{/* Featured & Sponsored Events Section - Hide in map view */}
-        {!state.isMapView && (
-          <>
-            {isFilterLoading ? (
-              <FeaturedEventsSkeleton />
-            ) : sponsoredFeaturedEvents.length > 0 ? (
-              <section className="px-6 py-8 bg-gradient-to-br from-primary/3 via-accent/2 to-transparent">
-                <div className="max-w-7xl mx-auto">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h2 className="text-2xl font-bold text-text mb-1">Featured Events</h2>
-                      <p className="text-muted text-sm">Hand-picked experiences you won't want to miss</p>
-                    </div>
-                    <span className="bg-primary text-white px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide">
-                      Don't Miss
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {sponsoredFeaturedEvents.map((event, index) => (
-                      <AnimatedEventCard
-                        key={event.id}
-                        event={event}
-                        index={index}
-                        staggerDelay={100}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </section>
-            ) : null}
-
-            {/* Hot This Weekend / Curated Events Section */}
-            {isFilterLoading ? (
-              <HotThisWeekendSkeleton selectedCity={state.selectedCity} />
-            ) : (
-              <section className="px-6 py-8">
-                <div className="max-w-7xl mx-auto">
-                  {state.selectedCity === 'Lexington' ? (
-                    <>
-                      <div className="flex items-center justify-between mb-4">
-                        <div>
-                          <h2 className="text-2xl font-bold text-text mb-1">Curated for Lexington</h2>
-                          <p className="text-muted text-sm">
-                            Specially selected experiences that showcase the best of Lexington's charm
-                          </p>
-                        </div>
-                        <span className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-semibold">
-                          Hand-picked
-                        </span>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="mb-6">
-                      <h2 className="text-2xl font-bold text-text mb-1">Hot This Weekend</h2>
-                      <p className="text-muted text-sm">Popular events happening near you</p>
-                    </div>
-                  )}
-                  <div className="flex space-x-6 overflow-x-auto pb-4 scrollbar-hide">
-                    {featuredEvents.map((event, index) => (
-                      <div key={event.id} className="w-80 flex-shrink-0">
-                        <AnimatedEventCard
-                          event={event}
-                          index={index}
-                          staggerDelay={80}
-                          reducedStagger={true}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
-          </>
-        )}
 
         {/* Filter Bar */}
         {isFilterLoading ? (
@@ -313,7 +215,7 @@ export default function HomePage() {
                     <button
                       key={category}
                       onClick={() => setActiveCategory(category)}
-                      className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
+                      className={`font-body text-ui-button px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
                         activeCategory === category
                           ? 'bg-primary text-white shadow-lg shadow-primary/25'
                           : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-800'
@@ -350,7 +252,7 @@ export default function HomePage() {
                   <button
                     key={category}
                     onClick={() => setActiveCategory(category)}
-                    className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                    className={`font-body text-ui-caption px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                       activeCategory === category
                         ? 'bg-primary text-white'
                         : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
@@ -368,7 +270,7 @@ export default function HomePage() {
         {state.isMapView ? (
           <section className="relative">
             <div className="h-[calc(100vh-200px)] min-h-[500px]">
-              <MapView className="w-full h-full" />
+              <EnhancedMapView className="w-full h-full" />
             </div>
           </section>
         ) : (
@@ -381,7 +283,7 @@ export default function HomePage() {
                 <div className="max-w-7xl mx-auto">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h2 className="text-2xl font-bold text-text mb-1">
+                      <h2 className="font-editorial text-editorial-lg font-semibold text-text mb-1">
                         {state.searchQuery.trim()
                           ? `Search Results for "${state.searchQuery}"`
                           : state.nearMeEnabled
@@ -389,7 +291,7 @@ export default function HomePage() {
                             : `Events in ${state.selectedCity}`
                         }
                       </h2>
-                      <p className="text-muted text-sm">
+                      <p className="font-body text-body-primary text-muted text-sm">
                         {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''}
                         {state.searchQuery.trim()
                           ? ` found in ${state.selectedCity}`
@@ -418,8 +320,8 @@ export default function HomePage() {
                       <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
                         <span className="text-2xl">{state.searchQuery.trim() ? '🔍' : '🎉'}</span>
                       </div>
-                      <h3 className="text-xl font-semibold text-text mb-2">No events found</h3>
-                      <p className="text-muted max-w-md mx-auto">
+                      <h3 className="font-editorial text-editorial-md font-semibold text-text mb-2">No events found</h3>
+                      <p className="font-body text-body-primary text-muted max-w-md mx-auto">
                         {state.searchQuery.trim()
                           ? `No events match "${state.searchQuery}" in ${state.selectedCity}. Try different keywords or check other cities.`
                           : `Try adjusting your filters or check back later for new events in ${state.selectedCity}`
@@ -428,7 +330,7 @@ export default function HomePage() {
                       {state.searchQuery.trim() && (
                         <button
                           onClick={() => setSearchQuery('')}
-                          className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold"
+                          className="font-body text-ui-button mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold"
                         >
                           Clear search
                         </button>
