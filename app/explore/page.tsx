@@ -9,6 +9,7 @@ import { searchEvents } from '@/lib/searchUtils';
 import AnimatedEventCard from '@/components/AnimatedEventCard';
 import FilterSheet from '@/components/FilterSheet';
 import BottomNav from '@/components/BottomNav';
+import LeafletMap from '@/components/LeafletMap';
 import { motion } from 'framer-motion';
 
 const categories: (EventCategory | 'All')[] = [
@@ -85,14 +86,15 @@ export default function ExplorePage() {
                           selectedCity !== 'All Cities' ||
                           searchQuery.trim();
 
-  const PlaceholderMapView = () => (
-    <div className="relative bg-gray-100 rounded-2xl overflow-hidden min-h-[500px]">
+  const MapView = () => (
+    <div className="relative min-h-[500px] md:min-h-[600px]">
       {/* Map Header */}
-      <div className="absolute top-6 left-6 right-6 z-10">
+      <div className="absolute top-6 left-6 right-6 z-20">
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
           <div className="flex items-center justify-between">
             <div className="text-sm font-semibold text-text">
               {filteredEvents.length} events found
+              {selectedCity !== 'All Cities' && ` in ${selectedCity}`}
             </div>
             <div className="flex items-center space-x-2 text-xs text-gray-600">
               <div className="w-3 h-3 bg-primary rounded-full"></div>
@@ -106,88 +108,45 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      {/* Map Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50">
-        {/* Simulated Map Grid */}
-        <div className="absolute inset-0 opacity-20">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={i}
-              className={`absolute border border-gray-300 ${
-                i % 2 === 0 ? 'w-32 h-32' : 'w-24 h-24'
-              }`}
-              style={{
-                left: `${(i * 73) % 100}%`,
-                top: `${(i * 43) % 100}%`,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Event Pins */}
-      <div className="absolute inset-0">
-        {filteredEvents.slice(0, 8).map((event, index) => {
-          const colors = {
-            'Food & Drink': 'bg-primary',
-            'Nightlife': 'bg-purple-500',
-            'Fitness': 'bg-green-500',
-            'Outdoors': 'bg-blue-500',
-            'Arts & Culture': 'bg-pink-500',
-            'Music': 'bg-red-500',
-            'Networking': 'bg-gray-500',
-            'Wellness': 'bg-teal-500',
-            'Sports': 'bg-indigo-500',
-            'Pop-ups & Markets': 'bg-yellow-500',
-          };
-
-          return (
-            <motion.div
-              key={event.id}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: index * 0.1, duration: 0.3 }}
-              className="absolute cursor-pointer group"
-              style={{
-                left: `${20 + (index * 47) % 60}%`,
-                top: `${20 + (index * 31) % 60}%`,
-              }}
-            >
-              {/* Pin */}
-              <div className={`w-8 h-8 ${colors[event.category] || 'bg-primary'} rounded-full border-4 border-white shadow-lg group-hover:scale-110 transition-transform`} />
-
-              {/* Event Card Popup */}
-              <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                <div className="bg-white rounded-2xl p-4 shadow-xl border min-w-64 max-w-80">
-                  <h3 className="font-bold text-text line-clamp-1">{event.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{event.location.neighborhood}</p>
-                  <p className="text-sm font-semibold text-primary mt-2">
-                    {event.price ? `$${event.price}` : 'Free'}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">{event.attendeeIds.length} going</p>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
+      {/* Leaflet Map */}
+      <LeafletMap
+        events={filteredEvents}
+        selectedCity={selectedCity}
+        className="w-full"
+      />
 
       {/* Map Legend */}
-      <div className="absolute bottom-6 left-6">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-3 shadow-lg">
-          <div className="text-xs font-semibold text-gray-700 mb-2">Categories</div>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            {Object.entries({
-              'Food & Drink': 'bg-primary',
-              'Nightlife': 'bg-purple-500',
-              'Fitness': 'bg-green-500',
-              'Music': 'bg-red-500'
-            }).map(([category, color]) => (
-              <div key={category} className="flex items-center space-x-2">
-                <div className={`w-3 h-3 ${color} rounded-full`} />
-                <span className="text-gray-600">{category}</span>
-              </div>
-            ))}
+      <div className="absolute bottom-6 left-6 z-20">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-3 shadow-lg max-w-xs">
+          <div className="text-xs font-semibold text-gray-700 mb-2">Event Categories</div>
+          <div className="grid grid-cols-1 gap-1 text-xs">
+            {Array.from(new Set(filteredEvents.map(e => e.category))).slice(0, 6).map((category) => {
+              const colors = {
+                'Food & Drink': '#FF6B35',
+                'Nightlife': '#8B5CF6',
+                'Fitness': '#10B981',
+                'Outdoors': '#3B82F6',
+                'Arts & Culture': '#EC4899',
+                'Music': '#EF4444',
+                'Networking': '#6B7280',
+                'Wellness': '#14B8A6',
+                'Sports': '#6366F1',
+                'Pop-ups & Markets': '#F59E0B',
+              };
+              const eventCount = filteredEvents.filter(e => e.category === category).length;
+              return (
+                <div key={category} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: colors[category as keyof typeof colors] || '#FF6B35' }}
+                    />
+                    <span className="text-gray-600">{category}</span>
+                  </div>
+                  <span className="text-gray-500 font-medium">{eventCount}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -332,7 +291,7 @@ export default function ExplorePage() {
 
             {/* Map or List View */}
             {isMapView ? (
-              <PlaceholderMapView />
+              <MapView />
             ) : (
               <div>
                 {filteredEvents.length > 0 ? (
