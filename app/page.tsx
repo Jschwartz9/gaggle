@@ -10,9 +10,7 @@ import CitySelector from '@/components/CitySelector';
 import SearchBar from '@/components/SearchBar';
 import BottomNav from '@/components/BottomNav';
 import NearMeButton from '@/components/NearMeButton';
-import EnhancedMapView from '@/components/EnhancedMapView';
-import MapToggleButton from '@/components/MapToggleButton';
-import { mockEvents, mockCities } from '@/lib/mockData';
+import { mockEvents, mockCities, getPersonalizedEvents, getTrendingEvents } from '@/lib/mockData';
 import { EventFilters, EventCategory } from '@/lib/types';
 import { useApp } from '@/contexts/AppContext';
 import { calculateDistance } from '@/lib/utils';
@@ -26,10 +24,15 @@ const categories: (EventCategory | 'All')[] = [
   'All',
   'Food & Drink',
   'Nightlife',
+  'Date Night',
+  'Late Night',
+  'Brunch & Chill',
   'Fitness',
   'Outdoors',
   'Arts & Culture',
   'Music',
+  'Skills & Hobbies',
+  'Gaming & Tech',
   'Networking',
   'Wellness',
   'Sports',
@@ -69,8 +72,27 @@ export default function HomePage() {
     if (filters.price !== 'Any') {
       events = events.filter(event => {
         if (filters.price === 'Free') return event.price === null;
-        if (filters.price === 'Under $25') return event.price !== null && event.price < 25;
-        if (filters.price === 'Under $50') return event.price !== null && event.price < 50;
+        if (filters.price === 'Under $15') {
+          // Check regular price, happy hour price, or student price
+          const regularPrice = event.price !== null && event.price < 15;
+          const happyHourPrice = event.happyHourPrice !== undefined && event.happyHourPrice < 15;
+          const studentPrice = event.studentPrice !== undefined && event.studentPrice < 15;
+          return regularPrice || happyHourPrice || studentPrice;
+        }
+        if (filters.price === 'Under $25') {
+          const regularPrice = event.price !== null && event.price < 25;
+          const happyHourPrice = event.happyHourPrice !== undefined && event.happyHourPrice < 25;
+          const studentPrice = event.studentPrice !== undefined && event.studentPrice < 25;
+          return regularPrice || happyHourPrice || studentPrice;
+        }
+        if (filters.price === 'Under $50') {
+          const regularPrice = event.price !== null && event.price < 50;
+          const happyHourPrice = event.happyHourPrice !== undefined && event.happyHourPrice < 50;
+          const studentPrice = event.studentPrice !== undefined && event.studentPrice < 50;
+          return regularPrice || happyHourPrice || studentPrice;
+        }
+        if (filters.price === 'Happy Hour') return event.hasHappyHour === true;
+        if (filters.price === 'Student Discount') return event.hasStudentDiscount === true;
         return true;
       });
     }
@@ -78,6 +100,7 @@ export default function HomePage() {
     if (filters.ageGroup !== 'Any') {
       events = events.filter(event => event.ageGroup === filters.ageGroup);
     }
+
 
     // Sort by distance when near me is enabled (but preserve search relevance order if searching)
     if (state.nearMeEnabled && state.userLocation && !state.searchQuery.trim()) {
@@ -100,6 +123,22 @@ export default function HomePage() {
 
 
   const hasActiveFilters = Object.values(filters).some(value => value !== 'Any') || activeCategory !== 'All' || state.searchQuery.trim();
+
+  // Get personalized recommendations when no active filters or search
+  const personalizedEvents = useMemo(() => {
+    if (!hasActiveFilters && !isInitialLoading) {
+      return getPersonalizedEvents('current');
+    }
+    return [];
+  }, [hasActiveFilters, isInitialLoading]);
+
+  // Get trending events
+  const trendingEvents = useMemo(() => {
+    if (!hasActiveFilters && !isInitialLoading) {
+      return getTrendingEvents();
+    }
+    return [];
+  }, [hasActiveFilters, isInitialLoading]);
 
   // Simulate initial loading
   useEffect(() => {
@@ -136,6 +175,7 @@ export default function HomePage() {
                   alt="Gaggle Logo"
                   width={140}
                   height={44}
+                  loading="eager"
                   className="h-9 w-auto"
                 />
               </div>
@@ -180,6 +220,7 @@ export default function HomePage() {
                 alt="Gaggle Logo"
                 width={140}
                 height={44}
+                loading="eager"
                 className="h-9 w-auto"
               />
             </div>
@@ -226,8 +267,6 @@ export default function HomePage() {
                   ))}
                 </div>
 
-                {/* Map Toggle Button */}
-                <MapToggleButton className="flex-shrink-0" />
 
                 {/* Filter Button */}
                 <button
@@ -266,16 +305,88 @@ export default function HomePage() {
           </div>
         )}
 
+
         {/* Map View or Events Grid */}
         {state.isMapView ? (
           <section className="relative">
             <div className="h-[calc(100vh-200px)] min-h-[500px]">
-              <EnhancedMapView className="w-full h-full" />
+              <div className="w-full h-full bg-gray-100 rounded-2xl flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-gray-600 text-lg font-semibold">Interactive Map</p>
+                  <p className="text-gray-500 text-sm mt-2">Available on the Explore page</p>
+                </div>
+              </div>
             </div>
           </section>
         ) : (
           <>
-            {/* Events Grid */}
+            {/* For You Section - Only show when no filters/search active */}
+            {personalizedEvents.length > 0 && (
+              <section className="px-6 py-6">
+                <div className="max-w-7xl mx-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="font-editorial text-editorial-lg font-semibold text-text mb-1">
+                        For You ✨
+                      </h2>
+                      <p className="font-body text-body-primary text-muted text-sm">
+                        Events picked just for you based on your interests and friend activity
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Horizontal scrolling event cards */}
+                  <div className="overflow-x-auto scrollbar-hide">
+                    <div className="flex space-x-4 pb-4">
+                      {personalizedEvents.map((event, index) => (
+                        <div key={event.id} className="flex-shrink-0 w-72">
+                          <AnimatedEventCard
+                            event={event}
+                            index={index}
+                            staggerDelay={50}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* Trending Now Section */}
+            {trendingEvents.length > 0 && (
+              <section className="px-6 py-6 bg-gradient-to-r from-orange-50 via-red-50 to-pink-50">
+                <div className="max-w-7xl mx-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="font-editorial text-editorial-lg font-semibold text-text mb-1">
+                        Trending Now 🔥
+                      </h2>
+                      <p className="font-body text-body-primary text-muted text-sm">
+                        What everyone's talking about right now
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Horizontal scrolling trending events */}
+                  <div className="overflow-x-auto scrollbar-hide">
+                    <div className="flex space-x-4 pb-4">
+                      {trendingEvents.map((event, index) => (
+                        <div key={event.id} className="flex-shrink-0 w-80">
+                          <AnimatedEventCard
+                            event={event}
+                            index={index}
+                            staggerDelay={75}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* Main Events Grid */}
             {isFilterLoading ? (
               <MainEventsGridSkeleton selectedCity={state.selectedCity} />
             ) : (

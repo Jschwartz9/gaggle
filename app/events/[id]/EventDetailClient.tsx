@@ -8,15 +8,24 @@ import { getUserById, mockEvents } from '@/lib/mockData';
 import WhoIsGoing from '@/components/WhoIsGoing';
 import EventCard from '@/components/EventCard';
 import BottomNav from '@/components/BottomNav';
+import EventLocationMap from '@/components/EventLocationMap';
+import EventHighlights from '@/components/EventHighlights';
+import EventGroupChats from '@/components/EventGroupChats';
+import EventCheckInComponent from '@/components/EventCheckIn';
 import { Event } from '@/lib/types';
 
 const categoryColors: Record<string, string> = {
   'Food & Drink': 'bg-orange-100 text-orange-800',
   'Nightlife': 'bg-purple-100 text-purple-800',
+  'Date Night': 'bg-rose-100 text-rose-800',
+  'Late Night': 'bg-violet-100 text-violet-800',
+  'Brunch & Chill': 'bg-amber-100 text-amber-800',
   'Fitness': 'bg-green-100 text-green-800',
   'Outdoors': 'bg-blue-100 text-blue-800',
   'Arts & Culture': 'bg-pink-100 text-pink-800',
   'Music': 'bg-red-100 text-red-800',
+  'Skills & Hobbies': 'bg-emerald-100 text-emerald-800',
+  'Gaming & Tech': 'bg-cyan-100 text-cyan-800',
   'Networking': 'bg-gray-100 text-gray-800',
   'Wellness': 'bg-teal-100 text-teal-800',
   'Sports': 'bg-indigo-100 text-indigo-800',
@@ -71,6 +80,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
             src={event.imageUrl}
             alt={event.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw"
             className="object-cover"
           />
           {/* Category Tag Overlay */}
@@ -117,10 +127,8 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
             </div>
           </div>
 
-          {/* Map Placeholder */}
-          <div className="bg-gray-100 rounded-lg h-32 flex items-center justify-center">
-            <p className="text-muted text-sm">Map placeholder</p>
-          </div>
+          {/* Interactive Event Location Map */}
+          <EventLocationMap event={event} height="h-48" className="rounded-xl shadow-lg" />
 
           {/* Host Info */}
           {host && (
@@ -131,6 +139,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
                     src={host.avatar}
                     alt={host.name}
                     fill
+                    sizes="48px"
                     className="object-cover"
                   />
                 </div>
@@ -180,6 +189,15 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
 
           {/* Who's Going Section */}
           <WhoIsGoing event={event} />
+
+          {/* Event Highlights */}
+          <EventHighlights eventId={event.id} />
+
+          {/* Group Chats */}
+          <EventGroupChats eventId={event.id} />
+
+          {/* Check-ins */}
+          <EventCheckInComponent eventId={event.id} />
 
           {/* Related Events */}
           {relatedEvents.length > 0 && (

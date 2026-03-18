@@ -1,4 +1,4 @@
-import { User, Event, City, EventCategory, AgeGroup, Notification, Message, Conversation } from './types';
+import { User, Event, City, EventCategory, AgeGroup, Notification, Message, Conversation, EventStory, EventHighlight, GroupChat, GroupMessage, EventCheckIn } from './types';
 
 // Mock Cities (11 US cities as specified, including Lexington)
 export const mockCities: City[] = [
@@ -147,7 +147,7 @@ export const mockEvents: Event[] = [
     category: 'Food & Drink',
     hostId: '1',
     imageUrl: 'https://picsum.photos/seed/wine/400/300',
-    date: '2024-03-15',
+    date: '2026-03-18',
     time: '7:00 PM',
     location: {
       city: 'New York',
@@ -159,12 +159,16 @@ export const mockEvents: Event[] = [
       },
     },
     price: 35,
+    happyHourPrice: 20,
+    studentPrice: 25,
     ageGroup: '21+' as AgeGroup,
     attendeeIds: ['1', '5', '3', '4', '8', '2', '7'], // 47 mock attendees (showing first 7)
     vibesTags: ['Upscale', 'Social', 'Views'],
     createdAt: '2024-03-01',
     featured: true,
     sponsored: true,
+    hasHappyHour: true,
+    hasStudentDiscount: true,
   },
   {
     id: '2',
@@ -173,7 +177,7 @@ export const mockEvents: Event[] = [
     category: 'Fitness',
     hostId: '2',
     imageUrl: 'https://picsum.photos/seed/trail/400/300',
-    date: '2024-03-17',
+    date: '2026-03-22',
     time: '8:00 AM',
     location: {
       city: 'Denver',
@@ -196,7 +200,7 @@ export const mockEvents: Event[] = [
     category: 'Music',
     hostId: '3',
     imageUrl: 'https://picsum.photos/seed/jazz/400/300',
-    date: '2024-03-16',
+    date: '2026-03-21',
     time: '8:30 PM',
     location: {
       city: 'Austin',
@@ -500,6 +504,132 @@ export const mockEvents: Event[] = [
     vibesTags: ['Vintage', 'Musical', 'Wine'],
     createdAt: '2024-03-14',
   },
+  {
+    id: '16',
+    title: 'Romantic Candlelit Dinner',
+    description: 'Intimate 3-course dinner with live acoustic music. Perfect for dates, anniversaries, or just treating someone special.',
+    category: 'Date Night',
+    hostId: '1',
+    imageUrl: 'https://picsum.photos/seed/datenight/400/300',
+    date: '2024-03-19',
+    time: '7:30 PM',
+    location: {
+      city: 'New York',
+      neighborhood: 'SoHo',
+      address: '789 Romance St',
+      coordinates: {
+        lat: 40.7231,
+        lng: -74.0021,
+      },
+    },
+    price: 65,
+    ageGroup: '21+' as AgeGroup,
+    attendeeIds: ['1', '4', '6', '7'], // 18 mock attendees
+    vibesTags: ['Romantic', 'Intimate', 'Upscale'],
+    createdAt: '2024-03-12',
+    featured: true,
+  },
+  {
+    id: '17',
+    title: 'Late Night Karaoke & Cocktails',
+    description: 'Sing your heart out with craft cocktails until 2am. Private booths available for groups.',
+    category: 'Late Night',
+    hostId: '3',
+    imageUrl: 'https://picsum.photos/seed/latenight/400/300',
+    date: '2024-03-16',
+    time: '10:00 PM',
+    location: {
+      city: 'Los Angeles',
+      neighborhood: 'West Hollywood',
+      address: '456 Night Owl Blvd',
+      coordinates: {
+        lat: 34.0902,
+        lng: -118.3644,
+      },
+    },
+    price: 25,
+    happyHourPrice: 12,
+    studentPrice: 18,
+    ageGroup: '21+' as AgeGroup,
+    attendeeIds: ['3', '2', '5', '8', '1', '4'], // 32 mock attendees
+    vibesTags: ['Party', 'Singing', 'Late'],
+    createdAt: '2024-03-08',
+    hasHappyHour: true,
+    hasStudentDiscount: true,
+  },
+  {
+    id: '18',
+    title: 'Bottomless Mimosa Brunch',
+    description: 'Instagram-worthy brunch spot with unlimited mimosas, avocado toast, and live DJ spinning chill vibes.',
+    category: 'Brunch & Chill',
+    hostId: '5',
+    imageUrl: 'https://picsum.photos/seed/brunch/400/300',
+    date: '2024-03-17',
+    time: '11:00 AM',
+    location: {
+      city: 'Miami',
+      neighborhood: 'South Beach',
+      address: '123 Brunch Ave',
+      coordinates: {
+        lat: 25.7907,
+        lng: -80.1300,
+      },
+    },
+    price: 35,
+    ageGroup: '21+' as AgeGroup,
+    attendeeIds: ['5', '1', '3', '6', '7', '2'], // 28 mock attendees
+    vibesTags: ['Instagram', 'Relaxed', 'Boozy'],
+    createdAt: '2024-03-11',
+    featured: true,
+  },
+  {
+    id: '19',
+    title: 'Pottery & Wine Workshop',
+    description: 'Learn to make ceramic bowls while sipping wine. All skill levels welcome - take home your creation!',
+    category: 'Skills & Hobbies',
+    hostId: '2',
+    imageUrl: 'https://picsum.photos/seed/pottery/400/300',
+    date: '2024-03-20',
+    time: '6:00 PM',
+    location: {
+      city: 'Austin',
+      neighborhood: 'East Austin',
+      address: '321 Creative Lane',
+      coordinates: {
+        lat: 30.2615,
+        lng: -97.7522,
+      },
+    },
+    price: 45,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['2', '4', '6', '1'], // 15 mock attendees
+    vibesTags: ['Creative', 'Learning', 'Wine'],
+    createdAt: '2024-03-09',
+  },
+  {
+    id: '20',
+    title: 'Board Game Cafe Night',
+    description: 'Epic board game tournament with craft beer, coffee, and prizes. From Catan to Dungeons & Dragons!',
+    category: 'Gaming & Tech',
+    hostId: '4',
+    imageUrl: 'https://picsum.photos/seed/boardgames/400/300',
+    date: '2024-03-21',
+    time: '7:00 PM',
+    location: {
+      city: 'Chicago',
+      neighborhood: 'Lincoln Park',
+      address: '654 Gamer St',
+      coordinates: {
+        lat: 41.9278,
+        lng: -87.6366,
+      },
+    },
+    price: null, // Free
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['4', '8', '2', '5', '3', '7', '1'], // 35 mock attendees
+    vibesTags: ['Nerdy', 'Social', 'Competitive'],
+    createdAt: '2024-03-07',
+  },
 ];
 
 // Mock Notifications
@@ -691,6 +821,109 @@ export const getAllUsers = (): User[] => {
   return [currentUser, ...mockUsers];
 };
 
+// Get personalized event recommendations based on user interests and friend activity
+export const getPersonalizedEvents = (userId: string): Event[] => {
+  const user = getUserById(userId);
+  if (!user) return [];
+
+  const userInterests = user.interests || [];
+  const userCity = user.city;
+  const friendsGoing = getFriendsListForUser(userId);
+
+  // Score events based on multiple factors
+  const scoredEvents = mockEvents.map(event => {
+    let score = 0;
+
+    // Interest match (high weight)
+    if (userInterests.includes(event.category)) {
+      score += 50;
+    }
+
+    // Location preference (medium weight)
+    if (event.location.city === userCity) {
+      score += 30;
+    }
+
+    // Friend social proof (high weight)
+    const friendsAttending = friendsGoing.filter(friend =>
+      friend.eventsAttending?.includes(event.id)
+    );
+    score += friendsAttending.length * 25;
+
+    // Budget-friendly bonus for young adults
+    if (event.price === null || event.hasHappyHour || event.hasStudentDiscount || (event.price && event.price < 25)) {
+      score += 15;
+    }
+
+    // Recent events get slight boost
+    const eventDate = new Date(event.createdAt);
+    const daysSinceCreated = (Date.now() - eventDate.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceCreated < 7) {
+      score += 10;
+    }
+
+    // Young adult friendly categories get extra boost
+    const youngAdultCategories = ['Date Night', 'Late Night', 'Brunch & Chill', 'Skills & Hobbies', 'Gaming & Tech'];
+    if (youngAdultCategories.includes(event.category)) {
+      score += 20;
+    }
+
+    return { event, score };
+  });
+
+  // Sort by score and return top events
+  return scoredEvents
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .map(item => item.event);
+};
+
+// Get trending events based on recent popularity and RSVP velocity
+export const getTrendingEvents = (): Event[] => {
+  const now = new Date();
+
+  const trendingEvents = mockEvents.map(event => {
+    let trendScore = 0;
+
+    // Base popularity from attendee count
+    trendScore += event.attendeeIds.length * 5;
+
+    // Recent creation bonus (events created in last 3 days)
+    const eventDate = new Date(event.createdAt);
+    const daysSinceCreated = (now.getTime() - eventDate.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceCreated <= 3) {
+      trendScore += 50;
+    } else if (daysSinceCreated <= 7) {
+      trendScore += 25;
+    }
+
+    // Young adult categories get trending boost
+    const trendyCategories = ['Late Night', 'Brunch & Chill', 'Gaming & Tech', 'Date Night'];
+    if (trendyCategories.includes(event.category)) {
+      trendScore += 30;
+    }
+
+    // Events happening soon get boost
+    const eventDateTime = new Date(`${event.date} ${event.time}`);
+    const hoursUntilEvent = (eventDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    if (hoursUntilEvent > 0 && hoursUntilEvent <= 48) {
+      trendScore += 40;
+    }
+
+    // Budget-friendly events are more likely to trend
+    if (event.price === null || event.hasHappyHour || event.hasStudentDiscount || (event.price && event.price < 30)) {
+      trendScore += 20;
+    }
+
+    return { event, trendScore };
+  });
+
+  return trendingEvents
+    .sort((a, b) => b.trendScore - a.trendScore)
+    .slice(0, 6)
+    .map(item => item.event);
+};
+
 // Add new event to mock data (for demo purposes - in real app would be API call)
 export const addNewEvent = (eventData: Omit<Event, 'id' | 'createdAt' | 'attendeeIds'>): Event => {
   const newEvent: Event = {
@@ -702,4 +935,530 @@ export const addNewEvent = (eventData: Omit<Event, 'id' | 'createdAt' | 'attende
 
   mockEvents.unshift(newEvent); // Add to beginning of array for recent events
   return newEvent;
+};
+
+// Mock Event Stories - Recent stories from events (expire after 24 hours)
+export const mockEventStories: EventStory[] = [
+  {
+    id: 'story_1',
+    eventId: '1',
+    userId: '1',
+    type: 'image',
+    mediaUrl: 'https://picsum.photos/seed/story1/400/600',
+    caption: 'Amazing wine selection! 🍷',
+    timestamp: '2026-03-18T19:30:00Z',
+    expiresAt: '2026-03-19T19:30:00Z',
+    views: ['current', '2', '3', '4'],
+  },
+  {
+    id: 'story_2',
+    eventId: '1',
+    userId: '3',
+    type: 'image',
+    mediaUrl: 'https://picsum.photos/seed/story2/400/600',
+    caption: 'The rooftop views are incredible! 🌆',
+    timestamp: '2026-03-18T20:15:00Z',
+    expiresAt: '2026-03-19T20:15:00Z',
+    views: ['current', '1', '2', '5'],
+  },
+  {
+    id: 'story_3',
+    eventId: '3',
+    userId: '2',
+    type: 'image',
+    mediaUrl: 'https://picsum.photos/seed/story3/400/600',
+    caption: 'Live jazz hitting different tonight 🎷',
+    timestamp: '2026-03-18T21:00:00Z',
+    expiresAt: '2026-03-19T21:00:00Z',
+    views: ['current', '1', '3'],
+  },
+  {
+    id: 'story_4',
+    eventId: '5',
+    userId: '4',
+    type: 'image',
+    mediaUrl: 'https://picsum.photos/seed/story4/400/600',
+    caption: 'Perfect date night spot 💕',
+    timestamp: '2026-03-18T20:45:00Z',
+    expiresAt: '2026-03-19T20:45:00Z',
+    views: ['current', '2', '6'],
+  },
+  {
+    id: 'story_5',
+    eventId: '8',
+    userId: '5',
+    type: 'image',
+    mediaUrl: 'https://picsum.photos/seed/story5/400/600',
+    caption: 'Tech meetup vibes! 💻',
+    timestamp: '2026-03-18T18:20:00Z',
+    expiresAt: '2026-03-19T18:20:00Z',
+    views: ['current', '1', '3', '7', '8'],
+  },
+];
+
+// Mock Event Highlights - Permanent collections of stories
+export const mockEventHighlights: EventHighlight[] = [
+  {
+    id: 'highlight_1',
+    eventId: '1',
+    title: 'Wine Night',
+    coverImage: 'https://picsum.photos/seed/highlight1/150/150',
+    stories: [
+      {
+        id: 'highlight_story_1',
+        eventId: '1',
+        userId: '1',
+        type: 'image',
+        mediaUrl: 'https://picsum.photos/seed/h1s1/400/600',
+        caption: 'Setting up for tonight!',
+        timestamp: '2026-03-15T17:00:00Z',
+        expiresAt: '2026-03-16T17:00:00Z',
+        views: ['current', '2', '3', '4', '5'],
+      },
+      {
+        id: 'highlight_story_2',
+        eventId: '1',
+        userId: '3',
+        type: 'image',
+        mediaUrl: 'https://picsum.photos/seed/h1s2/400/600',
+        caption: 'Cheers to new friends! 🥂',
+        timestamp: '2026-03-15T19:45:00Z',
+        expiresAt: '2026-03-16T19:45:00Z',
+        views: ['current', '1', '2', '4', '6'],
+      },
+    ],
+    createdAt: '2026-03-15T17:00:00Z',
+  },
+  {
+    id: 'highlight_2',
+    eventId: '3',
+    title: 'Jazz Vibes',
+    coverImage: 'https://picsum.photos/seed/highlight2/150/150',
+    stories: [
+      {
+        id: 'highlight_story_3',
+        eventId: '3',
+        userId: '2',
+        type: 'image',
+        mediaUrl: 'https://picsum.photos/seed/h2s1/400/600',
+        caption: 'The band is setting up 🎵',
+        timestamp: '2026-03-14T19:00:00Z',
+        expiresAt: '2026-03-15T19:00:00Z',
+        views: ['current', '1', '3', '5'],
+      },
+    ],
+    createdAt: '2026-03-14T19:00:00Z',
+  },
+];
+
+// Event Stories Helper Functions
+export const getActiveEventStories = (): EventStory[] => {
+  const now = new Date();
+  return mockEventStories.filter(story => new Date(story.expiresAt) > now);
+};
+
+export const getEventStoriesGrouped = (): { [eventId: string]: EventStory[] } => {
+  const activeStories = getActiveEventStories();
+  return activeStories.reduce((groups, story) => {
+    if (!groups[story.eventId]) {
+      groups[story.eventId] = [];
+    }
+    groups[story.eventId].push(story);
+    return groups;
+  }, {} as { [eventId: string]: EventStory[] });
+};
+
+export const getEventHighlights = (eventId: string): EventHighlight[] => {
+  return mockEventHighlights.filter(highlight => highlight.eventId === eventId);
+};
+
+export const getAllEventHighlights = (): EventHighlight[] => {
+  return mockEventHighlights.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+};
+
+export const getEventsWithActiveStories = (): Event[] => {
+  const storiesGrouped = getEventStoriesGrouped();
+  const eventIds = Object.keys(storiesGrouped);
+  return mockEvents.filter(event => eventIds.includes(event.id));
+};
+
+// Mock Group Chats - Event-specific group chats
+export const mockGroupChats: GroupChat[] = [
+  {
+    id: 'group_1',
+    eventId: '1',
+    name: 'Wine Night Squad',
+    description: 'Group for tonight\'s rooftop wine tasting! 🍷',
+    memberIds: ['current', '1', '3', '4', '5'],
+    adminIds: ['1'], // Event host is admin
+    createdAt: '2026-03-18T15:00:00Z',
+    lastActivity: '2026-03-18T19:45:00Z',
+    isPublic: true,
+    maxMembers: 20,
+  },
+  {
+    id: 'group_2',
+    eventId: '1',
+    name: 'First Timers Club',
+    description: 'New to wine tasting? Join us for tips and chatting!',
+    memberIds: ['current', '6', '7', '8'],
+    adminIds: ['6'],
+    createdAt: '2026-03-18T16:30:00Z',
+    lastActivity: '2026-03-18T18:20:00Z',
+    isPublic: true,
+    maxMembers: 10,
+  },
+  {
+    id: 'group_3',
+    eventId: '3',
+    name: 'Jazz Lovers Unite',
+    description: 'For the jazz enthusiasts attending Saturday night!',
+    memberIds: ['current', '2', '3', '7'],
+    adminIds: ['2', '3'],
+    createdAt: '2026-03-18T12:00:00Z',
+    lastActivity: '2026-03-18T17:30:00Z',
+    isPublic: true,
+    maxMembers: 15,
+  },
+  {
+    id: 'group_4',
+    eventId: '5',
+    name: 'Date Night Crew',
+    description: 'Couples and friends looking for a fun evening!',
+    memberIds: ['current', '4', '5', '6'],
+    adminIds: ['4'],
+    createdAt: '2026-03-18T14:15:00Z',
+    lastActivity: '2026-03-18T16:00:00Z',
+    isPublic: false, // Private group
+    maxMembers: 8,
+  },
+];
+
+// Mock Group Messages
+export const mockGroupMessages: GroupMessage[] = [
+  // Wine Night Squad messages
+  {
+    id: 'gmsg_1',
+    groupChatId: 'group_1',
+    senderId: '1',
+    content: 'Hey everyone! So excited for tonight! 🍷✨',
+    type: 'text',
+    timestamp: '2026-03-18T19:45:00Z',
+  },
+  {
+    id: 'gmsg_2',
+    groupChatId: 'group_1',
+    senderId: '3',
+    content: 'Same! Should we meet up beforehand? I know a great spot nearby',
+    type: 'text',
+    timestamp: '2026-03-18T19:46:30Z',
+  },
+  {
+    id: 'gmsg_3',
+    groupChatId: 'group_1',
+    senderId: 'current',
+    content: 'That sounds perfect! What time were you thinking?',
+    type: 'text',
+    timestamp: '2026-03-18T19:47:15Z',
+  },
+  {
+    id: 'gmsg_4',
+    groupChatId: 'group_1',
+    senderId: '4',
+    content: 'I can be there by 6:30! Can\'t wait to try those wines',
+    type: 'text',
+    timestamp: '2026-03-18T19:48:00Z',
+  },
+
+  // First Timers Club messages
+  {
+    id: 'gmsg_5',
+    groupChatId: 'group_2',
+    senderId: '6',
+    content: 'Welcome first-timers! Any questions about wine tasting?',
+    type: 'text',
+    timestamp: '2026-03-18T18:20:00Z',
+  },
+  {
+    id: 'gmsg_6',
+    groupChatId: 'group_2',
+    senderId: '7',
+    content: 'I\'ve never been to one before! Any tips?',
+    type: 'text',
+    timestamp: '2026-03-18T18:21:30Z',
+  },
+  {
+    id: 'gmsg_7',
+    groupChatId: 'group_2',
+    senderId: 'current',
+    content: 'Same here! Super nervous but excited 😅',
+    type: 'text',
+    timestamp: '2026-03-18T18:22:00Z',
+  },
+
+  // Jazz Lovers messages
+  {
+    id: 'gmsg_8',
+    groupChatId: 'group_3',
+    senderId: '2',
+    content: 'Saturday\'s lineup looks amazing! Anyone know the opening act?',
+    type: 'text',
+    timestamp: '2026-03-18T17:30:00Z',
+  },
+  {
+    id: 'gmsg_9',
+    groupChatId: 'group_3',
+    senderId: '3',
+    content: 'Yeah! It\'s a local quartet - they\'re incredible live 🎷',
+    type: 'text',
+    timestamp: '2026-03-18T17:31:45Z',
+  },
+];
+
+// Group Chat Helper Functions
+export const getGroupChatsForEvent = (eventId: string): GroupChat[] => {
+  return mockGroupChats.filter(chat => chat.eventId === eventId);
+};
+
+export const getPublicGroupChatsForEvent = (eventId: string): GroupChat[] => {
+  return mockGroupChats.filter(chat => chat.eventId === eventId && chat.isPublic);
+};
+
+export const getUserGroupChats = (userId: string): GroupChat[] => {
+  return mockGroupChats.filter(chat => chat.memberIds.includes(userId))
+    .sort((a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime());
+};
+
+export const getGroupMessages = (groupChatId: string): GroupMessage[] => {
+  return mockGroupMessages
+    .filter(msg => msg.groupChatId === groupChatId)
+    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+};
+
+export const getGroupChatById = (groupChatId: string): GroupChat | undefined => {
+  return mockGroupChats.find(chat => chat.id === groupChatId);
+};
+
+export const canUserJoinGroupChat = (groupChatId: string, userId: string): boolean => {
+  const chat = getGroupChatById(groupChatId);
+  if (!chat) return false;
+
+  // Already a member
+  if (chat.memberIds.includes(userId)) return false;
+
+  // Check if at max capacity
+  if (chat.maxMembers && chat.memberIds.length >= chat.maxMembers) return false;
+
+  // Must be public or invited
+  return chat.isPublic;
+};
+
+// Friend Suggestions Helper Functions
+export const getPeopleYouMayKnow = (userId: string): User[] => {
+  const user = getUserById(userId);
+  if (!user) return [];
+
+  const currentFollowing = user.following || [];
+  const currentFollowers = user.followers || [];
+  const userInterests = user.interests || [];
+  const userCity = user.city;
+
+  // Get all users except current user and already connected
+  const candidates = mockUsers.filter(candidate =>
+    candidate.id !== userId &&
+    !currentFollowing.includes(candidate.id) &&
+    !currentFollowers.includes(candidate.id)
+  );
+
+  // Score potential friends based on multiple factors
+  const scoredCandidates = candidates.map(candidate => {
+    let score = 0;
+
+    // Same city = +30 points
+    if (candidate.city === userCity) {
+      score += 30;
+    }
+
+    // Shared interests = +15 points per shared interest
+    const sharedInterests = candidate.interests.filter(interest =>
+      userInterests.includes(interest)
+    );
+    score += sharedInterests.length * 15;
+
+    // Mutual friends = +25 points per mutual friend
+    const userFriends = new Set([...currentFollowing, ...currentFollowers]);
+    const candidateFriends = new Set([...candidate.following, ...candidate.followers]);
+    const mutualFriends = [...userFriends].filter(friendId => candidateFriends.has(friendId));
+    score += mutualFriends.length * 25;
+
+    // Attending same events = +20 points per shared event
+    const userEvents = new Set(user.eventsAttending || []);
+    const candidateEvents = new Set(candidate.eventsAttending || []);
+    const sharedEvents = [...userEvents].filter(eventId => candidateEvents.has(eventId));
+    score += sharedEvents.length * 20;
+
+    // Age similarity (within 5 years) = +10 points
+    const ageDifference = Math.abs(user.age - candidate.age);
+    if (ageDifference <= 5) {
+      score += 10;
+    }
+
+    // Active user (hosting or attending events) = +5 points
+    if (candidate.eventsHosted.length > 0 || candidate.eventsAttending.length > 2) {
+      score += 5;
+    }
+
+    return {
+      user: candidate,
+      score,
+      sharedInterests,
+      mutualFriends: mutualFriends.map(id => getUserById(id)).filter(Boolean),
+      sharedEvents: sharedEvents.map(id => getEventById(id)).filter(Boolean),
+      reasonsToConnect: calculateConnectionReasons(candidate, user, sharedInterests, mutualFriends, sharedEvents)
+    };
+  });
+
+  // Sort by score (highest first) and return top 8 suggestions
+  return scoredCandidates
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .map(item => ({
+      ...item.user,
+      suggestionReasons: item.reasonsToConnect
+    }));
+};
+
+const calculateConnectionReasons = (
+  candidate: User,
+  currentUser: User,
+  sharedInterests: string[],
+  mutualFriends: (User | undefined)[],
+  sharedEvents: (Event | undefined)[]
+): string[] => {
+  const reasons: string[] = [];
+
+  if (candidate.city === currentUser.city) {
+    reasons.push(`Lives in ${candidate.city}`);
+  }
+
+  if (sharedInterests.length > 0) {
+    if (sharedInterests.length === 1) {
+      reasons.push(`Interested in ${sharedInterests[0]}`);
+    } else {
+      reasons.push(`${sharedInterests.length} shared interests`);
+    }
+  }
+
+  if (mutualFriends.length > 0) {
+    if (mutualFriends.length === 1) {
+      reasons.push(`Mutual friend: ${mutualFriends[0]?.name}`);
+    } else {
+      reasons.push(`${mutualFriends.length} mutual friends`);
+    }
+  }
+
+  if (sharedEvents.length > 0) {
+    if (sharedEvents.length === 1) {
+      reasons.push(`Going to ${sharedEvents[0]?.title}`);
+    } else {
+      reasons.push(`${sharedEvents.length} shared events`);
+    }
+  }
+
+  if (candidate.eventsHosted.length > 0) {
+    reasons.push(`Event organizer`);
+  }
+
+  return reasons.slice(0, 2); // Limit to top 2 most relevant reasons
+};
+
+// Mock Event Check-ins
+export const mockEventCheckIns: EventCheckIn[] = [
+  {
+    id: 'checkin_1',
+    eventId: '1',
+    userId: '1',
+    timestamp: '2026-03-18T19:35:00Z',
+    location: { lat: 40.7589, lng: -73.9851 },
+    photo: 'https://picsum.photos/seed/checkin1/400/400',
+    caption: 'Ready for some amazing wines! 🍷✨',
+    verified: true,
+  },
+  {
+    id: 'checkin_2',
+    eventId: '1',
+    userId: '3',
+    timestamp: '2026-03-18T19:42:00Z',
+    location: { lat: 40.7589, lng: -73.9851 },
+    caption: 'The rooftop view is incredible!',
+    verified: true,
+  },
+  {
+    id: 'checkin_3',
+    eventId: '1',
+    userId: 'current',
+    timestamp: '2026-03-18T19:50:00Z',
+    location: { lat: 40.7589, lng: -73.9851 },
+    photo: 'https://picsum.photos/seed/checkin3/400/400',
+    caption: 'First wine tasting event - so excited!',
+    verified: true,
+  },
+  {
+    id: 'checkin_4',
+    eventId: '3',
+    userId: '2',
+    timestamp: '2026-03-18T20:15:00Z',
+    location: { lat: 30.2672, lng: -97.7431 },
+    caption: 'Jazz night is starting! 🎷',
+    verified: true,
+  },
+  {
+    id: 'checkin_5',
+    eventId: '5',
+    userId: '4',
+    timestamp: '2026-03-18T18:30:00Z',
+    location: { lat: 25.7617, lng: -80.1918 },
+    photo: 'https://picsum.photos/seed/checkin5/400/400',
+    caption: 'Perfect date night spot with my partner ❤️',
+    verified: true,
+  },
+];
+
+// Check-in Helper Functions
+export const getEventCheckIns = (eventId: string): EventCheckIn[] => {
+  return mockEventCheckIns
+    .filter(checkIn => checkIn.eventId === eventId)
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+};
+
+export const getUserCheckIns = (userId: string): EventCheckIn[] => {
+  return mockEventCheckIns
+    .filter(checkIn => checkIn.userId === userId)
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+};
+
+export const getRecentCheckIns = (limit: number = 10): EventCheckIn[] => {
+  return mockEventCheckIns
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, limit);
+};
+
+export const hasUserCheckedInToEvent = (eventId: string, userId: string): boolean => {
+  return mockEventCheckIns.some(
+    checkIn => checkIn.eventId === eventId && checkIn.userId === userId
+  );
+};
+
+export const getCheckInCount = (eventId: string): number => {
+  return mockEventCheckIns.filter(checkIn => checkIn.eventId === eventId).length;
+};
+
+export const getFriendsCheckedInToEvent = (eventId: string, userId: string): EventCheckIn[] => {
+  const user = getUserById(userId);
+  if (!user) return [];
+
+  const friends = user.following || [];
+  return mockEventCheckIns.filter(
+    checkIn => checkIn.eventId === eventId && friends.includes(checkIn.userId)
+  );
 };

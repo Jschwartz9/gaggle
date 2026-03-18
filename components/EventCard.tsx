@@ -15,10 +15,15 @@ interface EventCardProps {
 const categoryColors: Record<string, string> = {
   'Food & Drink': 'bg-orange-100 text-orange-800',
   'Nightlife': 'bg-purple-100 text-purple-800',
+  'Date Night': 'bg-rose-100 text-rose-800',
+  'Late Night': 'bg-violet-100 text-violet-800',
+  'Brunch & Chill': 'bg-amber-100 text-amber-800',
   'Fitness': 'bg-green-100 text-green-800',
   'Outdoors': 'bg-blue-100 text-blue-800',
   'Arts & Culture': 'bg-pink-100 text-pink-800',
   'Music': 'bg-red-100 text-red-800',
+  'Skills & Hobbies': 'bg-emerald-100 text-emerald-800',
+  'Gaming & Tech': 'bg-cyan-100 text-cyan-800',
   'Networking': 'bg-gray-100 text-gray-800',
   'Wellness': 'bg-teal-100 text-teal-800',
   'Sports': 'bg-indigo-100 text-indigo-800',
@@ -41,9 +46,19 @@ export default function EventCard({ event }: EventCardProps) {
     return `${dayName} ${monthDay} • ${time}`;
   };
 
-  const formatPrice = (price: number | null) => {
-    if (price === null) return 'Free';
-    return `$${price}`;
+  const formatPrice = (event: Event) => {
+    if (event.price === null) return 'Free';
+
+    // Show the best price available
+    const prices = [];
+    if (event.price !== null) prices.push(event.price);
+    if (event.happyHourPrice !== undefined) prices.push(event.happyHourPrice);
+    if (event.studentPrice !== undefined) prices.push(event.studentPrice);
+
+    const minPrice = Math.min(...prices);
+    const isDiscounted = minPrice < (event.price || 0);
+
+    return isDiscounted ? `From $${minPrice}` : `$${event.price}`;
   };
 
   const handleRSVP = (e: React.MouseEvent) => {
@@ -82,7 +97,7 @@ export default function EventCard({ event }: EventCardProps) {
 
           {/* Category Tag */}
           <div className="absolute top-4 left-4">
-            <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border border-white/20 ${categoryColors[event.category] || 'bg-gray-100 text-gray-800'}`}>
+            <span className={`font-body text-ui-caption px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border border-white/20 ${categoryColors[event.category] || 'bg-gray-100 text-gray-800'}`}>
               {event.category}
             </span>
           </div>
@@ -106,13 +121,13 @@ export default function EventCard({ event }: EventCardProps) {
           {(event.featured || event.sponsored) && (
             <div className="absolute top-16 left-4 flex flex-col space-y-2">
               {event.featured && (
-                <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary text-white rounded-xl text-xs font-semibold shadow-lg shadow-primary/25">
+                <span className="font-body text-ui-caption flex items-center space-x-1.5 px-3 py-1.5 bg-primary text-white rounded-xl text-xs font-semibold shadow-lg shadow-primary/25">
                   <Star className="w-3 h-3 fill-current" />
                   <span>Featured</span>
                 </span>
               )}
               {event.sponsored && (
-                <span className="flex items-center space-x-1.5 px-3 py-1.5 bg-yellow-500 text-white rounded-xl text-xs font-semibold shadow-lg">
+                <span className="font-body text-ui-caption flex items-center space-x-1.5 px-3 py-1.5 bg-yellow-500 text-white rounded-xl text-xs font-semibold shadow-lg">
                   <DollarSign className="w-3 h-3" />
                   <span>Sponsored</span>
                 </span>
@@ -121,17 +136,30 @@ export default function EventCard({ event }: EventCardProps) {
           )}
 
           {/* Price Badge */}
-          <div className="absolute bottom-4 right-4">
-            <span className="px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-xl text-sm font-bold text-text shadow-sm">
-              {formatPrice(event.price)}
+          <div className="absolute bottom-4 right-4 flex flex-col items-end space-y-1">
+            <span className="font-body text-body-semibold px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-xl text-sm font-bold text-text shadow-sm">
+              {formatPrice(event)}
             </span>
+            {/* Budget-friendly badges */}
+            <div className="flex space-x-1">
+              {event.hasHappyHour && (
+                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-md text-xs font-semibold">
+                  Happy Hour
+                </span>
+              )}
+              {event.hasStudentDiscount && (
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-semibold">
+                  Student
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Card Content */}
         <div className="p-5">
           {/* Event Title */}
-          <h3 className="font-bold text-xl text-text mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+          <h3 className="font-editorial text-editorial-subhead font-bold text-xl text-text mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
             {event.title}
           </h3>
 
@@ -145,21 +173,21 @@ export default function EventCard({ event }: EventCardProps) {
           {/* Date & Time */}
           <div className="flex items-center text-gray-600 text-sm mb-2">
             <Calendar className="w-4 h-4 mr-2 text-primary" />
-            <span className="font-medium">{formatDate(event.date, event.time)}</span>
+            <span className="font-body text-body-medium font-medium">{formatDate(event.date, event.time)}</span>
           </div>
 
           {/* Location */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center text-gray-600 text-sm">
               <MapPin className="w-4 h-4 mr-2 text-primary" />
-              <span>{event.location.neighborhood}</span>
+              <span className="font-body text-body-primary">{event.location.neighborhood}</span>
             </div>
             {showDistance && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center space-x-1 bg-primary/10 text-primary px-2.5 py-1 rounded-full text-xs font-semibold"
+                className="font-body text-ui-caption flex items-center space-x-1 bg-primary/10 text-primary px-2.5 py-1 rounded-full text-xs font-semibold"
               >
                 <Navigation className="w-3 h-3" />
                 <span>{formatDistance(event.distance!)}</span>
@@ -188,7 +216,7 @@ export default function EventCard({ event }: EventCardProps) {
                 ))}
               </div>
               {/* Count */}
-              <span className="text-sm text-gray-600 ml-3 font-medium">
+              <span className="font-body text-body-medium text-sm text-gray-600 ml-3 font-medium">
                 <motion.span
                   key={attendeeCount}
                   initial={{ y: 10, opacity: 0 }}
@@ -204,7 +232,7 @@ export default function EventCard({ event }: EventCardProps) {
             <motion.button
               onClick={handleRSVP}
               whileTap={{ scale: 0.95 }}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`font-body text-ui-button px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                 isRSVP
                   ? 'bg-primary text-white shadow-lg shadow-primary/25'
                   : 'bg-primary/10 text-primary hover:bg-primary hover:text-white'

@@ -62,6 +62,7 @@ export default function FriendsGoingIndicator({ friends, eventId, eventTitle }: 
                 src={friend.avatar}
                 alt={friend.name}
                 fill
+                sizes="32px"
                 className="object-cover"
               />
             </motion.div>

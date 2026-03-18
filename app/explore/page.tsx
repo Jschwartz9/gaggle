@@ -16,10 +16,15 @@ const categories: (EventCategory | 'All')[] = [
   'All',
   'Food & Drink',
   'Nightlife',
+  'Date Night',
+  'Late Night',
+  'Brunch & Chill',
   'Fitness',
   'Outdoors',
   'Arts & Culture',
   'Music',
+  'Skills & Hobbies',
+  'Gaming & Tech',
   'Networking',
   'Wellness',
   'Sports',
@@ -68,8 +73,27 @@ export default function ExplorePage() {
     if (filters.price !== 'Any') {
       events = events.filter(event => {
         if (filters.price === 'Free') return event.price === null;
-        if (filters.price === 'Under $25') return event.price !== null && event.price < 25;
-        if (filters.price === 'Under $50') return event.price !== null && event.price < 50;
+        if (filters.price === 'Under $15') {
+          // Check regular price, happy hour price, or student price
+          const regularPrice = event.price !== null && event.price < 15;
+          const happyHourPrice = event.happyHourPrice !== undefined && event.happyHourPrice < 15;
+          const studentPrice = event.studentPrice !== undefined && event.studentPrice < 15;
+          return regularPrice || happyHourPrice || studentPrice;
+        }
+        if (filters.price === 'Under $25') {
+          const regularPrice = event.price !== null && event.price < 25;
+          const happyHourPrice = event.happyHourPrice !== undefined && event.happyHourPrice < 25;
+          const studentPrice = event.studentPrice !== undefined && event.studentPrice < 25;
+          return regularPrice || happyHourPrice || studentPrice;
+        }
+        if (filters.price === 'Under $50') {
+          const regularPrice = event.price !== null && event.price < 50;
+          const happyHourPrice = event.happyHourPrice !== undefined && event.happyHourPrice < 50;
+          const studentPrice = event.studentPrice !== undefined && event.studentPrice < 50;
+          return regularPrice || happyHourPrice || studentPrice;
+        }
+        if (filters.price === 'Happy Hour') return event.hasHappyHour === true;
+        if (filters.price === 'Student Discount') return event.hasStudentDiscount === true;
         return true;
       });
     }
@@ -77,6 +101,7 @@ export default function ExplorePage() {
     if (filters.ageGroup !== 'Any') {
       events = events.filter(event => event.ageGroup === filters.ageGroup);
     }
+
 
     return events;
   }, [searchQuery, selectedCity, activeCategory, filters]);

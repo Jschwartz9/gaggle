@@ -61,6 +61,7 @@ export default function WhoIsGoing({ event, showOptIn = true }: WhoIsGoingProps)
                   src={user.avatar}
                   alt={user.name}
                   fill
+                  sizes="40px"
                   className="object-cover"
                 />
               </div>

@@ -83,8 +83,8 @@ export default function ProfilePage() {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm border-b border-gray-100 px-6 py-6">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             <div>
-              <h1 className="text-3xl font-bold text-text mb-1">Profile</h1>
-              <p className="text-gray-600">Manage your account and connect with friends</p>
+              <h1 className="font-display text-display-brand text-3xl font-bold text-text mb-1">Profile</h1>
+              <p className="font-body text-body-primary text-gray-600">Manage your account and connect with friends</p>
             </div>
             <button className="p-3 hover:bg-gray-100 rounded-2xl transition-all hover:scale-105">
               <Settings className="w-6 h-6 text-gray-600" />
@@ -112,11 +112,11 @@ export default function ProfilePage() {
 
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-3">
-                    <h2 className="text-2xl font-bold text-text">{currentUser.name}</h2>
-                    <span className="text-gray-500 font-medium">({currentUser.age})</span>
+                    <h2 className="font-editorial text-editorial-lg font-bold text-text">{currentUser.name}</h2>
+                    <span className="font-body text-body-medium text-gray-500 font-medium">({currentUser.age})</span>
                   </div>
 
-                  <p className="text-gray-600 mb-4 text-lg leading-relaxed">{currentUser.bio}</p>
+                  <p className="font-body text-body-primary text-gray-600 mb-4 text-lg leading-relaxed">{currentUser.bio}</p>
 
                   <div className="flex items-center space-x-6 mb-4">
                     <div className="flex items-center space-x-2">

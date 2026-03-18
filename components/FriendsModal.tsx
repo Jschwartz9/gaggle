@@ -90,6 +90,7 @@ export default function FriendsModal({ isOpen, onClose, friends, eventTitle }: F
                       src={friend.avatar}
                       alt={friend.name}
                       fill
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>

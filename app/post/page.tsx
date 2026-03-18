@@ -230,6 +230,7 @@ export default function PostEventPage() {
                   src={formData.imageUrl}
                   alt="Event preview"
                   fill
+                  sizes="(max-width: 768px) 100vw, 75vw"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
@@ -585,6 +586,7 @@ export default function PostEventPage() {
                   src={formData.imageUrl || '/placeholder-event.jpg'}
                   alt={formData.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 75vw"
                   className="object-cover"
                 />
                 <div className="absolute top-4 left-4">

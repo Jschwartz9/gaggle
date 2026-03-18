@@ -25,6 +25,8 @@ export interface Event {
   time: string;
   location: Location;
   price: number | null; // null for free events
+  happyHourPrice?: number; // Special happy hour pricing
+  studentPrice?: number; // Special student discount pricing
   ageGroup: AgeGroup;
   maxGroupSize?: number;
   attendeeIds: string[];
@@ -33,6 +35,8 @@ export interface Event {
   featured?: boolean; // Featured events appear prominently
   sponsored?: boolean; // Sponsored events have special badges
   distance?: number; // Distance in miles when near me mode is active
+  hasHappyHour?: boolean; // Indicates if event has happy hour pricing
+  hasStudentDiscount?: boolean; // Indicates if event offers student discounts
 }
 
 // Location types
@@ -61,10 +65,15 @@ export interface City {
 export type EventCategory =
   | 'Food & Drink'
   | 'Nightlife'
+  | 'Date Night'
+  | 'Late Night'
+  | 'Brunch & Chill'
   | 'Fitness'
   | 'Outdoors'
   | 'Arts & Culture'
   | 'Music'
+  | 'Skills & Hobbies'
+  | 'Gaming & Tech'
   | 'Networking'
   | 'Wellness'
   | 'Sports'
@@ -74,9 +83,9 @@ export type InterestTag = EventCategory;
 
 export type AgeGroup = 'All ages' | '21+' | '25+';
 
-export type FilterPrice = 'Free' | 'Under $25' | 'Under $50' | 'Any';
+export type FilterPrice = 'Free' | 'Under $15' | 'Under $25' | 'Under $50' | 'Happy Hour' | 'Student Discount' | 'Any';
 export type FilterDistance = 'Under 1 mile' | 'Under 5 miles' | 'Under 10 miles' | 'Any';
-export type FilterDate = 'Today' | 'This Weekend' | 'This Week' | 'Any';
+export type FilterDate = 'Today' | 'Tonight' | 'This Weekend' | 'This Week' | 'Any';
 
 // Filter interface
 export interface EventFilters {
@@ -127,4 +136,65 @@ export interface Conversation {
   lastMessage?: Message;
   lastActivity: string;
   unreadCount: number;
+}
+
+// Event Stories types
+export interface EventStory {
+  id: string;
+  eventId: string;
+  userId: string; // Who posted the story
+  type: 'image' | 'video';
+  mediaUrl: string;
+  caption?: string;
+  timestamp: string;
+  expiresAt: string; // Stories expire after 24 hours
+  views: string[]; // Array of user IDs who viewed the story
+}
+
+export interface EventHighlight {
+  id: string;
+  eventId: string;
+  title: string;
+  coverImage: string;
+  stories: EventStory[];
+  createdAt: string;
+}
+
+// Group Chat types
+export interface GroupChat {
+  id: string;
+  eventId: string;
+  name: string;
+  description?: string;
+  memberIds: string[];
+  adminIds: string[];
+  createdAt: string;
+  lastActivity: string;
+  isPublic: boolean; // Public chats can be joined by anyone attending the event
+  maxMembers?: number;
+}
+
+export interface GroupMessage {
+  id: string;
+  groupChatId: string;
+  senderId: string;
+  content: string;
+  type: 'text' | 'image' | 'system';
+  timestamp: string;
+  replyTo?: string; // ID of message being replied to
+}
+
+// Check-in types
+export interface EventCheckIn {
+  id: string;
+  eventId: string;
+  userId: string;
+  timestamp: string;
+  location?: {
+    lat: number;
+    lng: number;
+  };
+  photo?: string; // Optional photo from check-in
+  caption?: string; // Optional caption
+  verified: boolean; // Whether check-in was location-verified
 }

@@ -8,8 +8,8 @@ import { Home, Search, Plus, User, Users } from 'lucide-react';
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/explore', icon: Search, label: 'Explore' },
-  { href: '/friends', icon: Users, label: 'Friends' },
   { href: '/post', icon: Plus, label: 'Post', isProminent: true },
+  { href: '/friends', icon: Users, label: 'Friends' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];
 

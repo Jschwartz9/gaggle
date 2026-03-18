@@ -5,6 +5,7 @@ import { Search, UserPlus, Users, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import BottomNav from '@/components/BottomNav';
+import PeopleYouMayKnow from '@/components/PeopleYouMayKnow';
 import { mockUsers } from '@/lib/mockData';
 import { User } from '@/lib/types';
 
@@ -190,32 +191,35 @@ export default function FriendsPage() {
                   </p>
                 )}
 
-                <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/10 rounded-2xl p-6 mb-6">
-                  <h3 className="text-lg font-semibold text-text mb-2">People You Might Know</h3>
-                  <p className="text-gray-600">
-                    Based on your interests and events you've attended
-                  </p>
-                </div>
-
-                {filteredSuggestions.length > 0 ? (
-                  filteredSuggestions.map(user => (
-                    <FriendCard key={user.id} user={user} type="suggestion" />
-                  ))
+{!searchQuery ? (
+                  <PeopleYouMayKnow />
                 ) : (
-                  <div className="text-center py-16">
-                    <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                      <UserPlus className="w-10 h-10 text-gray-400" />
+                  <>
+                    <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/10 rounded-2xl p-6 mb-6">
+                      <h3 className="text-lg font-semibold text-text mb-2">Search Results</h3>
+                      <p className="text-gray-600">
+                        {filteredSuggestions.length} result{filteredSuggestions.length !== 1 ? 's' : ''} for "{searchQuery}"
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-semibold text-text mb-3">
-                      No suggestions found
-                    </h3>
-                    <p className="text-gray-600 max-w-md mx-auto">
-                      {searchQuery
-                        ? 'Try different search terms'
-                        : 'Check back later for more suggestions based on your activity'
-                      }
-                    </p>
-                  </div>
+
+                    {filteredSuggestions.length > 0 ? (
+                      filteredSuggestions.map(user => (
+                        <FriendCard key={user.id} user={user} type="suggestion" />
+                      ))
+                    ) : (
+                      <div className="text-center py-16">
+                        <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                          <UserPlus className="w-10 h-10 text-gray-400" />
+                        </div>
+                        <h3 className="text-2xl font-semibold text-text mb-3">
+                          No suggestions found
+                        </h3>
+                        <p className="text-gray-600 max-w-md mx-auto">
+                          Try different search terms
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
