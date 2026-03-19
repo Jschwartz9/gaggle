@@ -60,7 +60,7 @@ export default function BottomNav() {
         {/* Logo */}
         <div className="mb-12">
           <Image
-            src="/gaggle-logo.svg"
+            src="/gaggle-logo.png"
             alt="Gaggle Logo"
             width={180}
             height={60}

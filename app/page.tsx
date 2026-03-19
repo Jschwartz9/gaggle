@@ -171,7 +171,7 @@ export default function HomePage() {
               {/* Logo */}
               <div className="flex items-center flex-shrink-0">
                 <Image
-                  src="/gaggle-logo.svg"
+                  src="/gaggle-logo.png"
                   alt="Gaggle Logo"
                   width={140}
                   height={44}
@@ -216,7 +216,7 @@ export default function HomePage() {
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
               <Image
-                src="/gaggle-logo.svg"
+                src="/gaggle-logo.png"
                 alt="Gaggle Logo"
                 width={140}
                 height={44}
