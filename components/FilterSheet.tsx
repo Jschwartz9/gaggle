@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { EventFilters, FilterPrice, FilterDistance, FilterDate, AgeGroup } from '@/lib/types';
+import { EventFilters, FilterPrice, FilterDistance, FilterDate, AgeGroup, FilterVibe, FilterGroupSize, FilterRecurring, FilterVenue } from '@/lib/types';
 
 interface FilterSheetProps {
   isOpen: boolean;
@@ -19,10 +19,14 @@ export default function FilterSheet({
 }: FilterSheetProps) {
   const [localFilters, setLocalFilters] = useState<EventFilters>(filters);
 
-  const priceOptions: FilterPrice[] = ['Free', 'Under $25', 'Under $50', 'Any'];
+  const priceOptions: FilterPrice[] = ['Free', 'Under $15', 'Under $25', 'Under $50', 'Happy Hour', 'Student Discount', 'Any'];
   const distanceOptions: FilterDistance[] = ['Under 1 mile', 'Under 5 miles', 'Under 10 miles', 'Any'];
   const ageOptions: (AgeGroup | 'Any')[] = ['21+', '25+', 'All ages', 'Any'];
   const dateOptions: FilterDate[] = ['Today', 'This Weekend', 'This Week', 'Any'];
+  const vibeOptions: FilterVibe[] = ['Chill', 'High Energy', 'Networking', 'Romantic', 'Wild Night', 'Any'];
+  const groupSizeOptions: FilterGroupSize[] = ['Solo-friendly', 'Small group (2-5)', 'Big crowd (10+)', 'Any'];
+  const recurringOptions: FilterRecurring[] = ['One-time', 'Recurring', 'Any'];
+  const venueOptions: FilterVenue[] = ['Indoor', 'Outdoor', 'Any'];
 
   const handleApplyFilters = () => {
     onFiltersChange(localFilters);
@@ -35,7 +39,11 @@ export default function FilterSheet({
       price: 'Any',
       distance: 'Any',
       ageGroup: 'Any',
-      date: 'Any'
+      date: 'Any',
+      vibe: 'Any',
+      groupSize: 'Any',
+      recurring: 'Any',
+      venue: 'Any'
     };
     setLocalFilters(resetFilters);
   };
@@ -135,6 +143,86 @@ export default function FilterSheet({
                   onClick={() => setLocalFilters({ ...localFilters, date: option })}
                   className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
                     localFilters.date === option
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-gray-200 text-muted hover:border-gray-300'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Vibe Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-text mb-3">Vibe</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {vibeOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setLocalFilters({ ...localFilters, vibe: option })}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                    localFilters.vibe === option
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-gray-200 text-muted hover:border-gray-300'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Group Size Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-text mb-3">Group Size</h3>
+            <div className="grid grid-cols-1 gap-2">
+              {groupSizeOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setLocalFilters({ ...localFilters, groupSize: option })}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                    localFilters.groupSize === option
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-gray-200 text-muted hover:border-gray-300'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Recurring Events Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-text mb-3">Event Type</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {recurringOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setLocalFilters({ ...localFilters, recurring: option })}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                    localFilters.recurring === option
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-gray-200 text-muted hover:border-gray-300'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Venue Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-text mb-3">Venue</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {venueOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setLocalFilters({ ...localFilters, venue: option })}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                    localFilters.venue === option
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-gray-200 text-muted hover:border-gray-300'
                   }`}

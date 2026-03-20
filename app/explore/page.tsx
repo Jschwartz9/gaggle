@@ -43,7 +43,11 @@ export default function ExplorePage() {
     price: 'Any',
     distance: 'Any',
     ageGroup: 'Any',
-    date: 'Any'
+    date: 'Any',
+    vibe: 'Any',
+    groupSize: 'Any',
+    recurring: 'Any',
+    venue: 'Any'
   });
 
   // Get all cities for filter
@@ -353,7 +357,11 @@ export default function ExplorePage() {
                             price: 'Any',
                             distance: 'Any',
                             ageGroup: 'Any',
-                            date: 'Any'
+                            date: 'Any',
+                            vibe: 'Any',
+                            groupSize: 'Any',
+                            recurring: 'Any',
+                            venue: 'Any'
                           });
                         }}
                         className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold"

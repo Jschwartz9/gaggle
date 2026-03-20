@@ -45,12 +45,17 @@ export default function HomePage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isFilterLoading, setIsFilterLoading] = useState(false);
+  const [eventTypeFilter, setEventTypeFilter] = useState<'all' | 'business' | 'community'>('all');
   const [filters, setFilters] = useState<EventFilters>({
     category: 'All',
     price: 'Any',
     distance: 'Any',
     ageGroup: 'Any',
-    date: 'Any'
+    date: 'Any',
+    vibe: 'Any',
+    groupSize: 'Any',
+    recurring: 'Any',
+    venue: 'Any'
   });
 
   // Filter events based on selected city, search query, and filters
@@ -61,6 +66,19 @@ export default function HomePage() {
     if (state.searchQuery.trim()) {
       const searchResults = searchEvents(events, state.searchQuery);
       events = searchResults.map(result => result.event);
+    }
+
+    // Apply event type filter (business vs personal)
+    if (eventTypeFilter !== 'all') {
+      events = events.filter(event => {
+        if (eventTypeFilter === 'business') {
+          return event.hostType === 'business' && event.hostVerified === true;
+        }
+        if (eventTypeFilter === 'community') {
+          return event.hostType !== 'business' || !event.hostVerified;
+        }
+        return true;
+      });
     }
 
     // Apply category filter
@@ -101,6 +119,48 @@ export default function HomePage() {
       events = events.filter(event => event.ageGroup === filters.ageGroup);
     }
 
+    // Apply vibe filter
+    if (filters.vibe !== 'Any') {
+      events = events.filter(event => {
+        if (filters.vibe === 'Chill') return event.vibesTags.some(tag => ['Chill', 'Relaxed', 'Cozy', 'Intimate'].includes(tag));
+        if (filters.vibe === 'High Energy') return event.vibesTags.some(tag => ['Energetic', 'Party', 'High Energy', 'Active'].includes(tag));
+        if (filters.vibe === 'Networking') return event.vibesTags.some(tag => ['Professional', 'Networking', 'Business'].includes(tag));
+        if (filters.vibe === 'Romantic') return event.vibesTags.some(tag => ['Romantic', 'Intimate', 'Date'].includes(tag));
+        if (filters.vibe === 'Wild Night') return event.vibesTags.some(tag => ['Party', 'Wild', 'Late-night', 'Crazy'].includes(tag));
+        return true;
+      });
+    }
+
+    // Apply group size filter
+    if (filters.groupSize !== 'Any') {
+      events = events.filter(event => {
+        const attendeeCount = event.attendeeIds.length;
+        if (filters.groupSize === 'Solo-friendly') return attendeeCount <= 15 || event.vibesTags.includes('Solo-friendly');
+        if (filters.groupSize === 'Small group (2-5)') return attendeeCount <= 25;
+        if (filters.groupSize === 'Big crowd (10+)') return attendeeCount >= 30;
+        return true;
+      });
+    }
+
+    // Apply recurring filter
+    if (filters.recurring !== 'Any') {
+      events = events.filter(event => {
+        const isRecurring = event.vibesTags.includes('Regular') || event.vibesTags.includes('Weekly') || event.vibesTags.includes('Monthly');
+        if (filters.recurring === 'Recurring') return isRecurring;
+        if (filters.recurring === 'One-time') return !isRecurring;
+        return true;
+      });
+    }
+
+    // Apply venue filter
+    if (filters.venue !== 'Any') {
+      events = events.filter(event => {
+        if (filters.venue === 'Outdoor') return event.vibesTags.some(tag => ['Outdoor', 'Scenic', 'Adventure', 'Park'].includes(tag));
+        if (filters.venue === 'Indoor') return !event.vibesTags.some(tag => ['Outdoor', 'Scenic', 'Adventure', 'Park'].includes(tag));
+        return true;
+      });
+    }
+
 
     // Sort by distance when near me is enabled (but preserve search relevance order if searching)
     if (state.nearMeEnabled && state.userLocation && !state.searchQuery.trim()) {
@@ -119,10 +179,10 @@ export default function HomePage() {
     }
 
     return events;
-  }, [state.selectedCity, state.searchQuery, activeCategory, filters, state.nearMeEnabled, state.userLocation]);
+  }, [state.selectedCity, state.searchQuery, eventTypeFilter, activeCategory, filters, state.nearMeEnabled, state.userLocation]);
 
 
-  const hasActiveFilters = Object.values(filters).some(value => value !== 'Any') || activeCategory !== 'All' || state.searchQuery.trim();
+  const hasActiveFilters = Object.values(filters).some(value => value !== 'Any') || activeCategory !== 'All' || state.searchQuery.trim() || eventTypeFilter !== 'all';
 
   // Get personalized recommendations when no active filters or search
   const personalizedEvents = useMemo(() => {
@@ -157,7 +217,7 @@ export default function HomePage() {
       }, 800); // 0.8 seconds for filter changes
       return () => clearTimeout(timer);
     }
-  }, [state.selectedCity, state.searchQuery, activeCategory, filters, isInitialLoading]);
+  }, [state.selectedCity, state.searchQuery, eventTypeFilter, activeCategory, filters, isInitialLoading]);
 
   // Show initial skeleton during first load
   if (isInitialLoading) {
@@ -173,10 +233,10 @@ export default function HomePage() {
                 <Image
                   src="/gaggle-logo.png"
                   alt="Gaggle Logo"
-                  width={140}
-                  height={44}
+                  width={280}
+                  height={88}
                   loading="eager"
-                  className="h-9 w-auto"
+                  className="h-16 w-auto"
                 />
               </div>
 
@@ -196,6 +256,20 @@ export default function HomePage() {
               <SearchBar className="w-full" />
             </div>
           </header>
+
+          {/* Event Type Filter Toggle - Skeleton */}
+          <div className="sticky top-[85px] z-30 bg-white/95 backdrop-blur-sm border-b border-gray-50 px-6 py-3">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center justify-between">
+                <div className="h-5 bg-gray-200 rounded w-48 animate-pulse"></div>
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <div className="h-8 bg-gray-200 rounded-md w-20 animate-pulse mr-1"></div>
+                  <div className="h-8 bg-gray-200 rounded-md w-28 animate-pulse mr-1"></div>
+                  <div className="h-8 bg-gray-200 rounded-md w-32 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Skeleton Sections */}
           <FilterBarSkeleton />
@@ -242,12 +316,57 @@ export default function HomePage() {
           </div>
         </header>
 
+        {/* Event Type Filter Toggle */}
+        <div className="sticky top-[85px] z-30 bg-white/95 backdrop-blur-sm border-b border-gray-50 px-6 py-3">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between">
+              {/* Tagline */}
+
+              {/* Toggle Buttons */}
+              <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setEventTypeFilter('all')}
+                  className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${
+                    eventTypeFilter === 'all'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  All Events
+                </button>
+                <button
+                  onClick={() => setEventTypeFilter('business')}
+                  className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all flex items-center space-x-1 ${
+                    eventTypeFilter === 'business'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <span>Business Events</span>
+                  <svg className="w-3.5 h-3.5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setEventTypeFilter('community')}
+                  className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${
+                    eventTypeFilter === 'community'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Community Events
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Filter Bar */}
         {isFilterLoading ? (
           <FilterBarSkeleton />
         ) : (
-          <div className="sticky top-[85px] z-20 bg-white/90 backdrop-blur-sm border-b border-gray-100 px-6 py-4">
+          <div className="sticky top-[144px] z-20 bg-white/90 backdrop-blur-sm border-b border-gray-100 px-6 py-4">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
                 {/* Category Tabs */}

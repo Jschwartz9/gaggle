@@ -1,4 +1,4 @@
-import { User, Event, City, EventCategory, AgeGroup, Notification, Message, Conversation, EventStory, EventHighlight, GroupChat, GroupMessage, EventCheckIn } from './types';
+import { User, Event, City, EventCategory, AgeGroup, Notification, Message, Conversation, EventStory, EventHighlight, GroupChat, GroupMessage, EventCheckIn, Club } from './types';
 
 // Mock Cities (11 US cities as specified, including Lexington)
 export const mockCities: City[] = [
@@ -146,8 +146,8 @@ export const mockEvents: Event[] = [
     description: 'Join us for an evening of curated wines with Manhattan skyline views. Featured wines from local vineyards with light bites.',
     category: 'Food & Drink',
     hostId: '1',
-    imageUrl: 'https://picsum.photos/seed/wine/400/300',
-    date: '2026-03-18',
+    imageUrl: 'https://picsum.photos/seed/wineglass/400/300',
+    date: '2024-04-18',
     time: '7:00 PM',
     location: {
       city: 'New York',
@@ -176,8 +176,8 @@ export const mockEvents: Event[] = [
     description: 'Start your week right with a refreshing trail run through scenic mountain paths. All fitness levels welcome!',
     category: 'Fitness',
     hostId: '2',
-    imageUrl: 'https://picsum.photos/seed/trail/400/300',
-    date: '2026-03-22',
+    imageUrl: 'https://picsum.photos/seed/running/400/300',
+    date: '2024-04-22',
     time: '8:00 AM',
     location: {
       city: 'Denver',
@@ -199,8 +199,8 @@ export const mockEvents: Event[] = [
     description: 'Live jazz performances paired with artisanal small plates. Discover local musicians and flavors.',
     category: 'Music',
     hostId: '3',
-    imageUrl: 'https://picsum.photos/seed/jazz/400/300',
-    date: '2026-03-21',
+    imageUrl: 'https://picsum.photos/seed/saxophone/400/300',
+    date: '2024-04-21',
     time: '8:30 PM',
     location: {
       city: 'Austin',
@@ -223,8 +223,8 @@ export const mockEvents: Event[] = [
     description: 'Connect with Chicago\'s tech community. Structured networking activities and startup showcase.',
     category: 'Networking',
     hostId: '4',
-    imageUrl: 'https://picsum.photos/seed/tech/400/300',
-    date: '2024-03-18',
+    imageUrl: 'https://picsum.photos/seed/networking/400/300',
+    date: '2024-04-18',
     time: '6:00 PM',
     location: {
       city: 'Chicago',
@@ -248,8 +248,8 @@ export const mockEvents: Event[] = [
     description: 'Browse unique artworks from emerging local artists. Interactive art installations and live painting demos.',
     category: 'Pop-ups & Markets',
     hostId: '5',
-    imageUrl: 'https://picsum.photos/seed/artmarket/400/300',
-    date: '2024-03-16',
+    imageUrl: 'https://picsum.photos/seed/artgallery/400/300',
+    date: '2024-04-16',
     time: '11:00 AM',
     location: {
       city: 'New York',
@@ -273,8 +273,8 @@ export const mockEvents: Event[] = [
     description: 'Learn basic salsa steps in a fun, welcoming environment. No partner or experience required!',
     category: 'Fitness',
     hostId: '6',
-    imageUrl: 'https://picsum.photos/seed/salsa/400/300',
-    date: '2024-03-19',
+    imageUrl: 'https://picsum.photos/seed/dancing/400/300',
+    date: '2024-04-19',
     time: '7:30 PM',
     location: {
       city: 'Miami',
@@ -297,8 +297,8 @@ export const mockEvents: Event[] = [
     description: 'Paddle along the Potomac River as the sun sets behind the monuments. Equipment provided.',
     category: 'Outdoors',
     hostId: '7',
-    imageUrl: 'https://picsum.photos/seed/kayak/400/300',
-    date: '2024-03-20',
+    imageUrl: 'https://picsum.photos/seed/kayaking/400/300',
+    date: '2024-04-20',
     time: '6:30 PM',
     location: {
       city: 'Washington DC',
@@ -321,7 +321,7 @@ export const mockEvents: Event[] = [
     category: 'Food & Drink',
     hostId: '8',
     imageUrl: 'https://picsum.photos/seed/market/400/300',
-    date: '2024-03-16',
+    date: '2024-04-16',
     time: '9:00 AM',
     location: {
       city: 'Nashville',
@@ -343,8 +343,8 @@ export const mockEvents: Event[] = [
     description: 'Support local comedians and enjoy laughs with craft cocktails. Sign up to perform or just enjoy the show!',
     category: 'Nightlife',
     hostId: '3',
-    imageUrl: 'https://picsum.photos/seed/comedy/400/300',
-    date: '2024-03-21',
+    imageUrl: 'https://picsum.photos/seed/microphone/400/300',
+    date: '2024-04-21',
     time: '9:00 PM',
     location: {
       city: 'Los Angeles',
@@ -363,12 +363,15 @@ export const mockEvents: Event[] = [
   },
   {
     id: '10',
-    title: 'Midnight Food Tour',
-    description: 'Explore Houston\'s best late-night eats with a local food guide. Four stops, endless flavor.',
+    title: 'After Dark Food Adventure',
+    description: 'Guided late-night food tour through Houston\'s Montrose district. Four stops including food trucks, 24-hour joints, and hidden gems known only to locals.',
     category: 'Food & Drink',
-    hostId: '8',
-    imageUrl: 'https://picsum.photos/seed/foodtour/400/300',
-    date: '2024-03-22',
+    hostId: 'houston-food-crawls',
+    hostName: 'Houston Food Crawls',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/food/400/300',
+    date: '2024-04-22',
     time: '11:30 PM',
     location: {
       city: 'Houston',
@@ -378,140 +381,166 @@ export const mockEvents: Event[] = [
         lng: -95.3954,
       },
     },
-    price: 30,
+    price: 35,
     ageGroup: '21+' as AgeGroup,
     attendeeIds: ['8', '4', '1', '7'], // 22 mock attendees (showing first 4)
-    vibesTags: ['Late-night', 'Foodie', 'Adventure'],
+    vibesTags: ['Late-night', 'Foodie', 'Local'],
     createdAt: '2024-03-09',
   },
-  // Lexington, VA Curated Events
+  // Real Lexington, VA Events
   {
     id: '11',
-    title: 'Blue Ridge Mountain Sunset Hike',
-    description: 'Join us for a guided sunset hike with stunning valley views. Perfect for photography and making new friends.',
+    title: 'Natural Bridge State Park Adventure',
+    description: 'Explore the massive 215-ft natural rock bridge with hiking trails and waterfall views. Perfect for photos and sunset watching.',
     category: 'Outdoors',
-    hostId: '7',
-    imageUrl: 'https://picsum.photos/seed/blueridge/400/300',
-    date: '2024-03-23',
-    time: '5:30 PM',
+    hostId: 'natural-bridge-state-park',
+    hostName: 'Natural Bridge State Park',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/bridge/400/300',
+    date: '2024-04-23',
+    time: '2:00 PM',
     location: {
       city: 'Lexington',
-      neighborhood: 'Blue Ridge Parkway',
+      neighborhood: '15-20 min south of Lexington',
+      address: 'Natural Bridge State Park',
       coordinates: {
-        lat: 37.7844,
-        lng: -79.4426,
+        lat: 37.6301,
+        lng: -79.5467,
       },
     },
-    price: 15,
+    price: 9,
     ageGroup: 'All ages' as AgeGroup,
-    attendeeIds: ['7', '2', '1', '5', '3'], // 18 mock attendees (showing first 5)
+    attendeeIds: ['7', '2', '1', '5', '3'],
     vibesTags: ['Scenic', 'Adventure', 'Photography'],
     createdAt: '2024-03-10',
   },
   {
     id: '12',
-    title: 'Historic Downtown Walking Tour',
-    description: 'Discover Lexington\'s rich Civil War history and charming architecture. Led by local historian.',
-    category: 'Arts & Culture',
-    hostId: '1',
-    imageUrl: 'https://picsum.photos/seed/historic/400/300',
-    date: '2024-03-24',
-    time: '2:00 PM',
-    location: {
-      city: 'Lexington',
-      neighborhood: 'Historic Downtown',
-      address: 'Washington & Lee University',
-      coordinates: {
-        lat: 37.7871,
-        lng: -79.4415,
-      },
-    },
-    price: null, // Free
-    ageGroup: 'All ages' as AgeGroup,
-    attendeeIds: ['1', '3', '5', '8'], // 12 mock attendees (showing first 4)
-    vibesTags: ['Educational', 'Historic', 'Walking'],
-    createdAt: '2024-03-11',
-  },
-  {
-    id: '13',
-    title: 'Farm-to-Table Dinner Experience',
-    description: 'Savor locally-sourced cuisine at a beautiful countryside venue. Meet the farmers and chefs behind your meal.',
-    category: 'Food & Drink',
-    hostId: '8',
-    imageUrl: 'https://picsum.photos/seed/farmtable/400/300',
-    date: '2024-03-25',
-    time: '6:00 PM',
-    location: {
-      city: 'Lexington',
-      neighborhood: 'Countryside',
-      address: 'Valley View Farm',
-      coordinates: {
-        lat: 37.7921,
-        lng: -79.4601,
-      },
-    },
-    price: 45,
-    ageGroup: '21+' as AgeGroup,
-    attendeeIds: ['8', '1', '4', '5', '2', '3'], // 24 mock attendees (showing first 6)
-    vibesTags: ['Farm-fresh', 'Intimate', 'Local'],
-    createdAt: '2024-03-12',
-  },
-  {
-    id: '14',
-    title: 'Artisan Coffee Cupping Workshop',
-    description: 'Learn the art of coffee tasting with local roasters. Discover flavor profiles and brewing techniques.',
-    category: 'Wellness',
-    hostId: '5',
-    imageUrl: 'https://picsum.photos/seed/coffee/400/300',
-    date: '2024-03-26',
+    title: 'Maury River Kayaking Adventure',
+    description: 'Float down the scenic Maury River with stunning cliff views. Perfect for swimming, relaxation, and adventure. All equipment provided.',
+    category: 'Outdoors',
+    hostId: 'maury-river-outfitters',
+    hostName: 'Maury River Outfitters',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/river/400/300',
+    date: '2024-04-24',
     time: '10:00 AM',
     location: {
       city: 'Lexington',
-      neighborhood: 'Downtown',
-      address: 'Main Street Coffee Co.',
+      neighborhood: 'Goshen Pass area',
+      address: 'Maury River Access Point',
       coordinates: {
-        lat: 37.7844,
-        lng: -79.4380,
+        lat: 37.8104,
+        lng: -79.3898,
       },
     },
-    price: 25,
+    price: 35,
+    studentPrice: 25,
     ageGroup: 'All ages' as AgeGroup,
-    attendeeIds: ['5', '1', '8', '3'], // 16 mock attendees (showing first 4)
-    vibesTags: ['Artisan', 'Educational', 'Cozy'],
+    attendeeIds: ['1', '3', '5', '8'],
+    vibesTags: ['Adventure', 'Water Sports', 'Scenic'],
+    createdAt: '2024-03-11',
+    hasStudentDiscount: true,
+  },
+  {
+    id: '13',
+    title: 'Lime Kiln Theater Concert Under the Stars',
+    description: 'Outdoor concert at the unique hillside venue built into limestone cliffs. Live music under the stars in one of Virginia\'s most beautiful settings.',
+    category: 'Music',
+    hostId: 'lime-kiln-theater',
+    hostName: 'Lime Kiln Theater',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/theater/400/300',
+    date: '2024-04-25',
+    time: '7:30 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Borden Road',
+      address: '607 Borden Rd, Lexington, VA',
+      coordinates: {
+        lat: 37.7735,
+        lng: -79.4512,
+      },
+    },
+    price: 28,
+    studentPrice: 20,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['8', '1', '4', '5', '2', '3'],
+    vibesTags: ['Live Music', 'Outdoor', 'Cultural'],
+    createdAt: '2024-03-12',
+    hasStudentDiscount: true,
+    featured: true,
+  },
+  {
+    id: '14',
+    title: 'Retro Arcade Night at Tommy\'s',
+    description: 'Classic arcade games and casual hangout spot in downtown Lexington. Perfect for groups looking for a fun, low-key night activity.',
+    category: 'Gaming & Tech',
+    hostId: 'tommys-arcade',
+    hostName: 'Tommy\'s Arcade',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/arcade/400/300',
+    date: '2024-04-26',
+    time: '7:00 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Downtown',
+      address: '5 W Nelson St, Lexington, VA',
+      coordinates: {
+        lat: 37.7844,
+        lng: -79.4426,
+      },
+    },
+    price: 10,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['5', '1', '8', '3'],
+    vibesTags: ['Retro', 'Social', 'Casual'],
     createdAt: '2024-03-13',
   },
   {
     id: '15',
-    title: 'Vintage Vinyl & Wine Night',
-    description: 'Browse rare vinyl records while sampling Virginia wines. Local musicians will perform acoustic sets.',
-    category: 'Music',
-    hostId: '3',
-    imageUrl: 'https://picsum.photos/seed/vinyl/400/300',
-    date: '2024-03-27',
-    time: '7:00 PM',
+    title: 'Haunting Tales Ghost Tour',
+    description: 'Night walking tour through historic downtown Lexington featuring local history and ghost stories. Discover the spooky side of this historic town.',
+    category: 'Arts & Culture',
+    hostId: 'haunting-tales-lex',
+    hostName: 'Haunting Tales Lexington',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/historic/400/300',
+    date: '2024-04-27',
+    time: '8:00 PM',
     location: {
       city: 'Lexington',
-      neighborhood: 'Main Street',
-      address: 'Record Exchange',
+      neighborhood: 'Historic Downtown',
+      address: 'Downtown Lexington Meeting Point',
       coordinates: {
-        lat: 37.7851,
-        lng: -79.4390,
+        lat: 37.7844,
+        lng: -79.4426,
       },
     },
-    price: 20,
-    ageGroup: '21+' as AgeGroup,
-    attendeeIds: ['3', '1', '5', '8', '2'], // 20 mock attendees (showing first 5)
-    vibesTags: ['Vintage', 'Musical', 'Wine'],
+    price: 18,
+    studentPrice: 15,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['3', '1', '5', '8', '2'],
+    vibesTags: ['Spooky', 'Historic', 'Walking Tour'],
     createdAt: '2024-03-14',
+    hasStudentDiscount: true,
   },
   {
     id: '16',
-    title: 'Romantic Candlelit Dinner',
-    description: 'Intimate 3-course dinner with live acoustic music. Perfect for dates, anniversaries, or just treating someone special.',
+    title: 'Candlelit Date Night Experience',
+    description: 'Intimate 5-course tasting menu with wine pairings and live acoustic music. Personalized service for couples celebrating special moments.',
     category: 'Date Night',
-    hostId: '1',
-    imageUrl: 'https://picsum.photos/seed/datenight/400/300',
-    date: '2024-03-19',
+    hostId: 'whiskey-bar-kitchen',
+    hostName: 'Whiskey Bar & Kitchen',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/candle/400/300',
+    date: '2024-04-19',
     time: '7:30 PM',
     location: {
       city: 'New York',
@@ -522,21 +551,24 @@ export const mockEvents: Event[] = [
         lng: -74.0021,
       },
     },
-    price: 65,
+    price: 95,
     ageGroup: '21+' as AgeGroup,
     attendeeIds: ['1', '4', '6', '7'], // 18 mock attendees
-    vibesTags: ['Romantic', 'Intimate', 'Upscale'],
+    vibesTags: ['Romantic', 'Luxury', 'Intimate'],
     createdAt: '2024-03-12',
     featured: true,
   },
   {
     id: '17',
-    title: 'Late Night Karaoke & Cocktails',
-    description: 'Sing your heart out with craft cocktails until 2am. Private booths available for groups.',
+    title: 'Private Booth Karaoke Night',
+    description: 'Premium karaoke experience with craft cocktails, private booths, and extensive song library. Party packages available until 2am.',
     category: 'Late Night',
-    hostId: '3',
-    imageUrl: 'https://picsum.photos/seed/latenight/400/300',
-    date: '2024-03-16',
+    hostId: 'sing-sing-karaoke',
+    hostName: 'Sing Sing Karaoke Lounge',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/karaoke/400/300',
+    date: '2024-04-16',
     time: '10:00 PM',
     location: {
       city: 'Los Angeles',
@@ -547,24 +579,27 @@ export const mockEvents: Event[] = [
         lng: -118.3644,
       },
     },
-    price: 25,
-    happyHourPrice: 12,
-    studentPrice: 18,
+    price: 35,
+    happyHourPrice: 20,
+    studentPrice: 25,
     ageGroup: '21+' as AgeGroup,
     attendeeIds: ['3', '2', '5', '8', '1', '4'], // 32 mock attendees
-    vibesTags: ['Party', 'Singing', 'Late'],
+    vibesTags: ['Party', 'Social', 'Premium'],
     createdAt: '2024-03-08',
     hasHappyHour: true,
     hasStudentDiscount: true,
   },
   {
     id: '18',
-    title: 'Bottomless Mimosa Brunch',
-    description: 'Instagram-worthy brunch spot with unlimited mimosas, avocado toast, and live DJ spinning chill vibes.',
+    title: 'Oceanfront Bottomless Brunch',
+    description: 'Instagrammable brunch with unlimited mimosas, fresh seafood, and live DJ. Beachside dining with panoramic ocean views.',
     category: 'Brunch & Chill',
-    hostId: '5',
+    hostId: 'ocean-deck-miami',
+    hostName: 'Ocean Deck Miami',
+    hostType: 'business',
+    hostVerified: true,
     imageUrl: 'https://picsum.photos/seed/brunch/400/300',
-    date: '2024-03-17',
+    date: '2024-04-17',
     time: '11:00 AM',
     location: {
       city: 'Miami',
@@ -575,21 +610,24 @@ export const mockEvents: Event[] = [
         lng: -80.1300,
       },
     },
-    price: 35,
+    price: 45,
     ageGroup: '21+' as AgeGroup,
     attendeeIds: ['5', '1', '3', '6', '7', '2'], // 28 mock attendees
-    vibesTags: ['Instagram', 'Relaxed', 'Boozy'],
+    vibesTags: ['Oceanview', 'Upscale', 'Social'],
     createdAt: '2024-03-11',
     featured: true,
   },
   {
     id: '19',
-    title: 'Pottery & Wine Workshop',
-    description: 'Learn to make ceramic bowls while sipping wine. All skill levels welcome - take home your creation!',
+    title: 'Pottery Wheel & Wine Workshop',
+    description: 'Create your own ceramic masterpiece with professional instruction and wine pairings. All materials included, plus kiln firing and pickup in 2 weeks.',
     category: 'Skills & Hobbies',
-    hostId: '2',
+    hostId: 'clay-collective-austin',
+    hostName: 'Clay Collective Austin',
+    hostType: 'business',
+    hostVerified: true,
     imageUrl: 'https://picsum.photos/seed/pottery/400/300',
-    date: '2024-03-20',
+    date: '2024-04-20',
     time: '6:00 PM',
     location: {
       city: 'Austin',
@@ -600,20 +638,23 @@ export const mockEvents: Event[] = [
         lng: -97.7522,
       },
     },
-    price: 45,
+    price: 65,
     ageGroup: 'All ages' as AgeGroup,
     attendeeIds: ['2', '4', '6', '1'], // 15 mock attendees
-    vibesTags: ['Creative', 'Learning', 'Wine'],
+    vibesTags: ['Hands-on', 'Artistic', 'Social'],
     createdAt: '2024-03-09',
   },
   {
     id: '20',
-    title: 'Board Game Cafe Night',
-    description: 'Epic board game tournament with craft beer, coffee, and prizes. From Catan to Dungeons & Dragons!',
+    title: 'Board Game Tournament Night',
+    description: 'Weekly board game tournament with 200+ games, craft beer, specialty coffee, and prizes. Expert game masters help you learn new games.',
     category: 'Gaming & Tech',
-    hostId: '4',
+    hostId: 'dice-dojo-chicago',
+    hostName: 'The Dice Dojo',
+    hostType: 'business',
+    hostVerified: true,
     imageUrl: 'https://picsum.photos/seed/boardgames/400/300',
-    date: '2024-03-21',
+    date: '2024-04-21',
     time: '7:00 PM',
     location: {
       city: 'Chicago',
@@ -624,11 +665,153 @@ export const mockEvents: Event[] = [
         lng: -87.6366,
       },
     },
-    price: null, // Free
+    price: 8,
     ageGroup: 'All ages' as AgeGroup,
     attendeeIds: ['4', '8', '2', '5', '3', '7', '1'], // 35 mock attendees
-    vibesTags: ['Nerdy', 'Social', 'Competitive'],
+    vibesTags: ['Strategic', 'Social', 'Competitive'],
     createdAt: '2024-03-07',
+  },
+  {
+    id: '21',
+    title: 'Natural Bridge Illumination Show',
+    description: 'Magical nighttime light show projected on the 215-ft natural rock bridge. A unique and spectacular evening experience.',
+    category: 'Arts & Culture',
+    hostId: 'natural-bridge-state-park',
+    hostName: 'Natural Bridge State Park',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/lights/400/300',
+    date: '2024-04-28',
+    time: '8:30 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Natural Bridge',
+      address: 'Natural Bridge State Park',
+      coordinates: {
+        lat: 37.6301,
+        lng: -79.5467,
+      },
+    },
+    price: 12,
+    studentPrice: 10,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['2', '4', '6', '1'],
+    vibesTags: ['Spectacular', 'Nighttime', 'Unique'],
+    createdAt: '2024-03-15',
+    hasStudentDiscount: true,
+    featured: true,
+  },
+  {
+    id: '22',
+    title: 'Boxerwood Gardens Nature Walk',
+    description: 'Peaceful walking trails through beautiful gardens and treehouses. Perfect for relaxation, journaling, or mindful walking.',
+    category: 'Wellness',
+    hostId: 'boxerwood-gardens',
+    hostName: 'Boxerwood Gardens',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/garden/400/300',
+    date: '2024-04-29',
+    time: '2:00 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Ross Road',
+      address: '963 Ross Rd, Lexington, VA',
+      coordinates: {
+        lat: 37.7892,
+        lng: -79.4654,
+      },
+    },
+    price: null, // Free (donations encouraged)
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['3', '5', '7'],
+    vibesTags: ['Peaceful', 'Nature', 'Mindful'],
+    createdAt: '2024-03-16',
+  },
+  {
+    id: '23',
+    title: 'Virginia Safari Park Drive-Through Adventure',
+    description: 'Drive-through safari experience where you can feed animals from your car. One of the most fun group activities near Lexington.',
+    category: 'Outdoors',
+    hostId: 'virginia-safari-park',
+    hostName: 'Virginia Safari Park',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/animals/400/300',
+    date: '2024-04-30',
+    time: '11:00 AM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Natural Bridge',
+      address: '229 Safari Ln, Natural Bridge, VA',
+      coordinates: {
+        lat: 37.6234,
+        lng: -79.5398,
+      },
+    },
+    price: 25,
+    studentPrice: 20,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['1', '2', '3', '4', '5', '6'],
+    vibesTags: ['Animals', 'Adventure', 'Group Fun'],
+    createdAt: '2024-03-17',
+    hasStudentDiscount: true,
+  },
+  {
+    id: '24',
+    title: 'Chessie Nature Trail Bike Ride',
+    description: '6-mile scenic trail ride along the Maury River following an old railroad line. Beautiful views and perfect for all skill levels.',
+    category: 'Fitness',
+    hostId: 'chessie-trail-outfitters',
+    hostName: 'Chessie Trail Bike Rentals',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/bicycle/400/300',
+    date: '2024-05-01',
+    time: '10:00 AM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Old Buena Vista Road',
+      address: 'Chessie Nature Trail Trailhead',
+      coordinates: {
+        lat: 37.7789,
+        lng: -79.4203,
+      },
+    },
+    price: 15, // Bike rental
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['2', '7', '4'],
+    vibesTags: ['Scenic', 'Active', 'River Views'],
+    createdAt: '2024-03-18',
+  },
+  {
+    id: '25',
+    title: 'Historic Downtown Carriage Tour',
+    description: 'Unique horse-drawn carriage tour through historic Lexington. Learn local history while enjoying a charming ride through town.',
+    category: 'Arts & Culture',
+    hostId: 'lexington-carriage-company',
+    hostName: 'Lexington Carriage Company',
+    hostType: 'business',
+    hostVerified: true,
+    imageUrl: 'https://picsum.photos/seed/horse/400/300',
+    date: '2024-05-02',
+    time: '3:00 PM',
+    location: {
+      city: 'Lexington',
+      neighborhood: 'Historic Downtown',
+      address: 'Downtown Lexington Departure Point',
+      coordinates: {
+        lat: 37.7844,
+        lng: -79.4426,
+      },
+    },
+    price: 25,
+    studentPrice: 20,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['1', '3', '8'],
+    vibesTags: ['Historic', 'Unique', 'Charming'],
+    createdAt: '2024-03-19',
+    hasStudentDiscount: true,
   },
 ];
 
@@ -946,8 +1129,8 @@ export const mockEventStories: EventStory[] = [
     type: 'image',
     mediaUrl: 'https://picsum.photos/seed/story1/400/600',
     caption: 'Amazing wine selection! 🍷',
-    timestamp: '2026-03-18T19:30:00Z',
-    expiresAt: '2026-03-19T19:30:00Z',
+    timestamp: '2024-04-18T19:30:00Z',
+    expiresAt: '2024-04-19T19:30:00Z',
     views: ['current', '2', '3', '4'],
   },
   {
@@ -957,8 +1140,8 @@ export const mockEventStories: EventStory[] = [
     type: 'image',
     mediaUrl: 'https://picsum.photos/seed/story2/400/600',
     caption: 'The rooftop views are incredible! 🌆',
-    timestamp: '2026-03-18T20:15:00Z',
-    expiresAt: '2026-03-19T20:15:00Z',
+    timestamp: '2024-03-18T20:15:00Z',
+    expiresAt: '2024-03-19T20:15:00Z',
     views: ['current', '1', '2', '5'],
   },
   {
@@ -968,8 +1151,8 @@ export const mockEventStories: EventStory[] = [
     type: 'image',
     mediaUrl: 'https://picsum.photos/seed/story3/400/600',
     caption: 'Live jazz hitting different tonight 🎷',
-    timestamp: '2026-03-18T21:00:00Z',
-    expiresAt: '2026-03-19T21:00:00Z',
+    timestamp: '2024-03-18T21:00:00Z',
+    expiresAt: '2024-03-19T21:00:00Z',
     views: ['current', '1', '3'],
   },
   {
@@ -979,8 +1162,8 @@ export const mockEventStories: EventStory[] = [
     type: 'image',
     mediaUrl: 'https://picsum.photos/seed/story4/400/600',
     caption: 'Perfect date night spot 💕',
-    timestamp: '2026-03-18T20:45:00Z',
-    expiresAt: '2026-03-19T20:45:00Z',
+    timestamp: '2024-03-18T20:45:00Z',
+    expiresAt: '2024-03-19T20:45:00Z',
     views: ['current', '2', '6'],
   },
   {
@@ -990,8 +1173,8 @@ export const mockEventStories: EventStory[] = [
     type: 'image',
     mediaUrl: 'https://picsum.photos/seed/story5/400/600',
     caption: 'Tech meetup vibes! 💻',
-    timestamp: '2026-03-18T18:20:00Z',
-    expiresAt: '2026-03-19T18:20:00Z',
+    timestamp: '2024-03-18T18:20:00Z',
+    expiresAt: '2024-03-19T18:20:00Z',
     views: ['current', '1', '3', '7', '8'],
   },
 ];
@@ -1011,8 +1194,8 @@ export const mockEventHighlights: EventHighlight[] = [
         type: 'image',
         mediaUrl: 'https://picsum.photos/seed/h1s1/400/600',
         caption: 'Setting up for tonight!',
-        timestamp: '2026-03-15T17:00:00Z',
-        expiresAt: '2026-03-16T17:00:00Z',
+        timestamp: '2024-03-15T17:00:00Z',
+        expiresAt: '2024-03-16T17:00:00Z',
         views: ['current', '2', '3', '4', '5'],
       },
       {
@@ -1022,12 +1205,12 @@ export const mockEventHighlights: EventHighlight[] = [
         type: 'image',
         mediaUrl: 'https://picsum.photos/seed/h1s2/400/600',
         caption: 'Cheers to new friends! 🥂',
-        timestamp: '2026-03-15T19:45:00Z',
-        expiresAt: '2026-03-16T19:45:00Z',
+        timestamp: '2024-03-15T19:45:00Z',
+        expiresAt: '2024-03-16T19:45:00Z',
         views: ['current', '1', '2', '4', '6'],
       },
     ],
-    createdAt: '2026-03-15T17:00:00Z',
+    createdAt: '2024-03-15T17:00:00Z',
   },
   {
     id: 'highlight_2',
@@ -1042,12 +1225,12 @@ export const mockEventHighlights: EventHighlight[] = [
         type: 'image',
         mediaUrl: 'https://picsum.photos/seed/h2s1/400/600',
         caption: 'The band is setting up 🎵',
-        timestamp: '2026-03-14T19:00:00Z',
-        expiresAt: '2026-03-15T19:00:00Z',
+        timestamp: '2024-03-14T19:00:00Z',
+        expiresAt: '2024-03-15T19:00:00Z',
         views: ['current', '1', '3', '5'],
       },
     ],
-    createdAt: '2026-03-14T19:00:00Z',
+    createdAt: '2024-03-14T19:00:00Z',
   },
 ];
 
@@ -1091,8 +1274,8 @@ export const mockGroupChats: GroupChat[] = [
     description: 'Group for tonight\'s rooftop wine tasting! 🍷',
     memberIds: ['current', '1', '3', '4', '5'],
     adminIds: ['1'], // Event host is admin
-    createdAt: '2026-03-18T15:00:00Z',
-    lastActivity: '2026-03-18T19:45:00Z',
+    createdAt: '2024-03-18T15:00:00Z',
+    lastActivity: '2024-03-18T19:45:00Z',
     isPublic: true,
     maxMembers: 20,
   },
@@ -1103,8 +1286,8 @@ export const mockGroupChats: GroupChat[] = [
     description: 'New to wine tasting? Join us for tips and chatting!',
     memberIds: ['current', '6', '7', '8'],
     adminIds: ['6'],
-    createdAt: '2026-03-18T16:30:00Z',
-    lastActivity: '2026-03-18T18:20:00Z',
+    createdAt: '2024-03-18T16:30:00Z',
+    lastActivity: '2024-03-18T18:20:00Z',
     isPublic: true,
     maxMembers: 10,
   },
@@ -1115,8 +1298,8 @@ export const mockGroupChats: GroupChat[] = [
     description: 'For the jazz enthusiasts attending Saturday night!',
     memberIds: ['current', '2', '3', '7'],
     adminIds: ['2', '3'],
-    createdAt: '2026-03-18T12:00:00Z',
-    lastActivity: '2026-03-18T17:30:00Z',
+    createdAt: '2024-03-18T12:00:00Z',
+    lastActivity: '2024-03-18T17:30:00Z',
     isPublic: true,
     maxMembers: 15,
   },
@@ -1127,8 +1310,8 @@ export const mockGroupChats: GroupChat[] = [
     description: 'Couples and friends looking for a fun evening!',
     memberIds: ['current', '4', '5', '6'],
     adminIds: ['4'],
-    createdAt: '2026-03-18T14:15:00Z',
-    lastActivity: '2026-03-18T16:00:00Z',
+    createdAt: '2024-03-18T14:15:00Z',
+    lastActivity: '2024-03-18T16:00:00Z',
     isPublic: false, // Private group
     maxMembers: 8,
   },
@@ -1143,7 +1326,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: '1',
     content: 'Hey everyone! So excited for tonight! 🍷✨',
     type: 'text',
-    timestamp: '2026-03-18T19:45:00Z',
+    timestamp: '2024-03-18T19:45:00Z',
   },
   {
     id: 'gmsg_2',
@@ -1151,7 +1334,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: '3',
     content: 'Same! Should we meet up beforehand? I know a great spot nearby',
     type: 'text',
-    timestamp: '2026-03-18T19:46:30Z',
+    timestamp: '2024-03-18T19:46:30Z',
   },
   {
     id: 'gmsg_3',
@@ -1159,7 +1342,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: 'current',
     content: 'That sounds perfect! What time were you thinking?',
     type: 'text',
-    timestamp: '2026-03-18T19:47:15Z',
+    timestamp: '2024-03-18T19:47:15Z',
   },
   {
     id: 'gmsg_4',
@@ -1167,7 +1350,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: '4',
     content: 'I can be there by 6:30! Can\'t wait to try those wines',
     type: 'text',
-    timestamp: '2026-03-18T19:48:00Z',
+    timestamp: '2024-03-18T19:48:00Z',
   },
 
   // First Timers Club messages
@@ -1177,7 +1360,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: '6',
     content: 'Welcome first-timers! Any questions about wine tasting?',
     type: 'text',
-    timestamp: '2026-03-18T18:20:00Z',
+    timestamp: '2024-03-18T18:20:00Z',
   },
   {
     id: 'gmsg_6',
@@ -1185,7 +1368,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: '7',
     content: 'I\'ve never been to one before! Any tips?',
     type: 'text',
-    timestamp: '2026-03-18T18:21:30Z',
+    timestamp: '2024-03-18T18:21:30Z',
   },
   {
     id: 'gmsg_7',
@@ -1193,7 +1376,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: 'current',
     content: 'Same here! Super nervous but excited 😅',
     type: 'text',
-    timestamp: '2026-03-18T18:22:00Z',
+    timestamp: '2024-03-18T18:22:00Z',
   },
 
   // Jazz Lovers messages
@@ -1203,7 +1386,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: '2',
     content: 'Saturday\'s lineup looks amazing! Anyone know the opening act?',
     type: 'text',
-    timestamp: '2026-03-18T17:30:00Z',
+    timestamp: '2024-03-18T17:30:00Z',
   },
   {
     id: 'gmsg_9',
@@ -1211,7 +1394,7 @@ export const mockGroupMessages: GroupMessage[] = [
     senderId: '3',
     content: 'Yeah! It\'s a local quartet - they\'re incredible live 🎷',
     type: 'text',
-    timestamp: '2026-03-18T17:31:45Z',
+    timestamp: '2024-03-18T17:31:45Z',
   },
 ];
 
@@ -1381,7 +1564,7 @@ export const mockEventCheckIns: EventCheckIn[] = [
     id: 'checkin_1',
     eventId: '1',
     userId: '1',
-    timestamp: '2026-03-18T19:35:00Z',
+    timestamp: '2024-03-18T19:35:00Z',
     location: { lat: 40.7589, lng: -73.9851 },
     photo: 'https://picsum.photos/seed/checkin1/400/400',
     caption: 'Ready for some amazing wines! 🍷✨',
@@ -1391,7 +1574,7 @@ export const mockEventCheckIns: EventCheckIn[] = [
     id: 'checkin_2',
     eventId: '1',
     userId: '3',
-    timestamp: '2026-03-18T19:42:00Z',
+    timestamp: '2024-03-18T19:42:00Z',
     location: { lat: 40.7589, lng: -73.9851 },
     caption: 'The rooftop view is incredible!',
     verified: true,
@@ -1400,7 +1583,7 @@ export const mockEventCheckIns: EventCheckIn[] = [
     id: 'checkin_3',
     eventId: '1',
     userId: 'current',
-    timestamp: '2026-03-18T19:50:00Z',
+    timestamp: '2024-03-18T19:50:00Z',
     location: { lat: 40.7589, lng: -73.9851 },
     photo: 'https://picsum.photos/seed/checkin3/400/400',
     caption: 'First wine tasting event - so excited!',
@@ -1410,7 +1593,7 @@ export const mockEventCheckIns: EventCheckIn[] = [
     id: 'checkin_4',
     eventId: '3',
     userId: '2',
-    timestamp: '2026-03-18T20:15:00Z',
+    timestamp: '2024-03-18T20:15:00Z',
     location: { lat: 30.2672, lng: -97.7431 },
     caption: 'Jazz night is starting! 🎷',
     verified: true,
@@ -1419,7 +1602,7 @@ export const mockEventCheckIns: EventCheckIn[] = [
     id: 'checkin_5',
     eventId: '5',
     userId: '4',
-    timestamp: '2026-03-18T18:30:00Z',
+    timestamp: '2024-03-18T18:30:00Z',
     location: { lat: 25.7617, lng: -80.1918 },
     photo: 'https://picsum.photos/seed/checkin5/400/400',
     caption: 'Perfect date night spot with my partner ❤️',
@@ -1464,4 +1647,206 @@ export const getFriendsCheckedInToEvent = (eventId: string, userId: string): Eve
   return mockEventCheckIns.filter(
     checkIn => checkIn.eventId === eventId && friends.includes(checkIn.userId)
   );
+};
+
+// Mock Clubs - Private interest-based groups
+export const mockClubs: Club[] = [
+  {
+    id: 'club_1',
+    name: 'NYC Morning Runners Club',
+    description: 'Early birds who love to start the day with a run through Central Park. All fitness levels welcome!',
+    category: 'Fitness',
+    city: 'New York',
+    memberIds: ['current', '2', '4', '7', '1'],
+    adminIds: ['2'],
+    memberCount: 127,
+    maxMembers: 200,
+    isPrivate: true,
+    activityLevel: 'High',
+    coverImage: 'https://picsum.photos/seed/runclub/400/300',
+    createdAt: '2024-01-15',
+    lastActivity: '2024-03-18T08:00:00Z',
+    tags: ['Running', 'Early Morning', 'Central Park', 'Fitness'],
+    requirements: 'Must commit to 2+ runs per week'
+  },
+  {
+    id: 'club_2',
+    name: 'Brooklyn Art Collective',
+    description: 'Creative community exploring galleries, hosting studio visits, and organizing pop-up exhibitions.',
+    category: 'Arts & Culture',
+    city: 'New York',
+    memberIds: ['current', '1', '3', '5', '8'],
+    adminIds: ['1', '5'],
+    memberCount: 89,
+    maxMembers: 150,
+    isPrivate: true,
+    activityLevel: 'Medium',
+    coverImage: 'https://picsum.photos/seed/artcollective/400/300',
+    createdAt: '2024-02-01',
+    lastActivity: '2024-03-17T19:30:00Z',
+    tags: ['Art', 'Galleries', 'Creative', 'Brooklyn']
+  },
+  {
+    id: 'club_3',
+    name: 'DC Volleyball League',
+    description: 'Competitive volleyball league with weekly games and tournaments. Indoor and beach volleyball options.',
+    category: 'Sports',
+    city: 'Washington DC',
+    memberIds: ['7', '2', '4'],
+    adminIds: ['7'],
+    memberCount: 156,
+    maxMembers: 200,
+    isPrivate: true,
+    activityLevel: 'High',
+    coverImage: 'https://picsum.photos/seed/volleyball/400/300',
+    createdAt: '2024-01-20',
+    lastActivity: '2024-03-18T18:00:00Z',
+    tags: ['Volleyball', 'Sports', 'Competitive', 'Team'],
+    requirements: 'Intermediate skill level required'
+  },
+  {
+    id: 'club_4',
+    name: 'Miami Food & Wine Society',
+    description: 'Exclusive dining experiences, wine tastings, and chef collaborations across South Beach and beyond.',
+    category: 'Food & Drink',
+    city: 'Miami',
+    memberIds: ['6', '1', '3'],
+    adminIds: ['6'],
+    memberCount: 73,
+    maxMembers: 100,
+    isPrivate: true,
+    activityLevel: 'Medium',
+    coverImage: 'https://picsum.photos/seed/foodwine/400/300',
+    createdAt: '2024-02-10',
+    lastActivity: '2024-03-16T20:15:00Z',
+    tags: ['Fine Dining', 'Wine', 'Exclusive', 'Culinary']
+  },
+  {
+    id: 'club_5',
+    name: 'Chicago Tech Founders Circle',
+    description: 'Intimate network of startup founders and tech entrepreneurs. Monthly dinners, pitch practice, and mentorship.',
+    category: 'Networking',
+    city: 'Chicago',
+    memberIds: ['4', '2', '8'],
+    adminIds: ['4'],
+    memberCount: 52,
+    maxMembers: 75,
+    isPrivate: true,
+    activityLevel: 'Medium',
+    coverImage: 'https://picsum.photos/seed/techfounders/400/300',
+    createdAt: '2024-01-25',
+    lastActivity: '2024-03-17T18:30:00Z',
+    tags: ['Startups', 'Founders', 'Tech', 'Mentorship'],
+    requirements: 'Must be founder/co-founder of a company'
+  }
+];
+
+// Club Helper Functions
+export const getClubById = (id: string): Club | undefined => {
+  return mockClubs.find(club => club.id === id);
+};
+
+export const getClubsByCity = (cityName: string): Club[] => {
+  return mockClubs.filter(club => club.city === cityName);
+};
+
+export const getClubsByCategory = (category: EventCategory): Club[] => {
+  return mockClubs.filter(club => club.category === category);
+};
+
+export const getUserClubs = (userId: string): Club[] => {
+  return mockClubs.filter(club => club.memberIds.includes(userId));
+};
+
+export const getClubsUserCanJoin = (userId: string, cityName: string): Club[] => {
+  return mockClubs.filter(club =>
+    club.city === cityName &&
+    !club.memberIds.includes(userId) &&
+    (!club.maxMembers || club.memberCount < club.maxMembers)
+  );
+};
+
+export const isUserClubMember = (clubId: string, userId: string): boolean => {
+  const club = getClubById(clubId);
+  return club ? club.memberIds.includes(userId) : false;
+};
+
+export const isUserClubAdmin = (clubId: string, userId: string): boolean => {
+  const club = getClubById(clubId);
+  return club ? club.adminIds.includes(userId) : false;
+};
+
+// Club Events - Only visible to club members
+export const mockClubEvents: Event[] = [
+  {
+    id: 'club_event_1',
+    title: 'Morning Runners Weekly 5K',
+    description: 'Our weekly group 5K run through Central Park. Coffee and stretching session afterward.',
+    category: 'Fitness',
+    hostId: 'club_1',
+    hostName: 'NYC Morning Runners Club',
+    hostType: 'business',
+    hostVerified: true,
+    clubId: 'club_1',
+    imageUrl: 'https://picsum.photos/seed/running/400/300',
+    date: '2024-04-23',
+    time: '7:00 AM',
+    location: {
+      city: 'New York',
+      neighborhood: 'Central Park',
+      address: 'Central Park Bandshell',
+      coordinates: {
+        lat: 40.7689,
+        lng: -73.9760,
+      },
+    },
+    price: null,
+    ageGroup: 'All ages' as AgeGroup,
+    attendeeIds: ['current', '2', '4', '7'], // Only club members
+    vibesTags: ['Members Only', 'Morning', 'Regular'],
+    createdAt: '2024-03-15',
+  },
+  {
+    id: 'club_event_2',
+    title: 'Private Gallery Opening - Emerging Artists',
+    description: 'Exclusive preview of new contemporary works before public opening. Wine and artist meet-and-greet.',
+    category: 'Arts & Culture',
+    hostId: 'club_2',
+    hostName: 'Brooklyn Art Collective',
+    hostType: 'business',
+    hostVerified: true,
+    clubId: 'club_2',
+    imageUrl: 'https://picsum.photos/seed/artgallery/400/300',
+    date: '2024-04-24',
+    time: '6:00 PM',
+    location: {
+      city: 'New York',
+      neighborhood: 'Brooklyn',
+      address: 'Collective Art Space',
+      coordinates: {
+        lat: 40.6782,
+        lng: -73.9442,
+      },
+    },
+    price: null,
+    ageGroup: '21+' as AgeGroup,
+    attendeeIds: ['current', '1', '3', '5'], // Only club members
+    vibesTags: ['Members Only', 'Exclusive', 'Preview'],
+    createdAt: '2024-03-16',
+    featured: true,
+  }
+];
+
+export const getClubEvents = (clubId: string): Event[] => {
+  return mockClubEvents.filter(event => event.clubId === clubId);
+};
+
+export const getAllClubEvents = (): Event[] => {
+  return mockClubEvents;
+};
+
+export const getClubEventsForUser = (userId: string): Event[] => {
+  const userClubs = getUserClubs(userId);
+  const userClubIds = userClubs.map(club => club.id);
+  return mockClubEvents.filter(event => event.clubId && userClubIds.includes(event.clubId));
 };

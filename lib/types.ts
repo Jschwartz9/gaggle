@@ -20,6 +20,10 @@ export interface Event {
   description: string;
   category: EventCategory;
   hostId: string;
+  hostName?: string; // Display name for business hosts
+  hostType?: 'business' | 'user'; // Type of host
+  hostVerified?: boolean; // Whether business host is verified
+  clubId?: string; // If event is hosted by a club (members-only)
   imageUrl: string;
   date: string;
   time: string;
@@ -86,6 +90,10 @@ export type AgeGroup = 'All ages' | '21+' | '25+';
 export type FilterPrice = 'Free' | 'Under $15' | 'Under $25' | 'Under $50' | 'Happy Hour' | 'Student Discount' | 'Any';
 export type FilterDistance = 'Under 1 mile' | 'Under 5 miles' | 'Under 10 miles' | 'Any';
 export type FilterDate = 'Today' | 'Tonight' | 'This Weekend' | 'This Week' | 'Any';
+export type FilterVibe = 'Chill' | 'High Energy' | 'Networking' | 'Romantic' | 'Wild Night' | 'Any';
+export type FilterGroupSize = 'Solo-friendly' | 'Small group (2-5)' | 'Big crowd (10+)' | 'Any';
+export type FilterRecurring = 'One-time' | 'Recurring' | 'Any';
+export type FilterVenue = 'Indoor' | 'Outdoor' | 'Any';
 
 // Filter interface
 export interface EventFilters {
@@ -94,6 +102,10 @@ export interface EventFilters {
   distance: FilterDistance;
   ageGroup: AgeGroup | 'Any';
   date: FilterDate;
+  vibe: FilterVibe;
+  groupSize: FilterGroupSize;
+  recurring: FilterRecurring;
+  venue: FilterVenue;
 }
 
 // Onboarding types
@@ -197,4 +209,24 @@ export interface EventCheckIn {
   photo?: string; // Optional photo from check-in
   caption?: string; // Optional caption
   verified: boolean; // Whether check-in was location-verified
+}
+
+// Club types
+export interface Club {
+  id: string;
+  name: string;
+  description: string;
+  category: InterestTag;
+  city: string;
+  memberIds: string[];
+  adminIds: string[];
+  memberCount: number;
+  maxMembers?: number;
+  isPrivate: boolean;
+  activityLevel: 'Low' | 'Medium' | 'High';
+  coverImage: string;
+  createdAt: string;
+  lastActivity: string;
+  tags: string[];
+  requirements?: string; // Special requirements to join
 }
